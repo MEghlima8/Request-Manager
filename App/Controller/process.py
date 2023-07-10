@@ -1,4 +1,4 @@
-from App.Controller import db_controller as db
+from App.Controller import db_postgres_controller as db
 from datetime import datetime
 import json
 

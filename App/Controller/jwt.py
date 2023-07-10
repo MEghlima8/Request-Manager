@@ -1,7 +1,8 @@
-from App.Controller import db_controller as db
+from App.Controller import db_postgres_controller as db
 import jwt
 import datetime
 from flask import abort
+from App import config
 
 class Token :
     
@@ -9,7 +10,8 @@ class Token :
         self.username = username
         self.token = token
     
-        self.secret_key = 'Djlea@2guz@.QaFsn'
+        # Set jwt secret key
+        self.secret_key = config.configs['jwt_secret_key']
     
     
     def encode_token(self):         
@@ -67,7 +69,6 @@ class Token :
         try:
             # Decode the JWT and get the payload and header
             payload = jwt.decode(self.token, self.secret_key, algorithms=['HS256'])
-            # header = jwt.get_unverified_header(self.token)
             return payload
             
         except jwt.DecodeError:

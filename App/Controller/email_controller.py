@@ -1,5 +1,5 @@
 from flask import request
-from App.Controller import db_controller as db
+from App.Controller import db_postgres_controller as db
 import smtplib
 import ssl
 import random
@@ -7,15 +7,16 @@ import string
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import threading
+from App import config
 
 
 class Email:
     
     def  __init__(self):
-        self.s_smtp_server = 'smtp.gmail.com'
-        self.i_port = 465
-        self.s_sender_email = 'eghlima.mohammad@gmail.com'
-        self.s_password = 'bqdfacwywjjdhdvp'
+        self.s_smtp_server = config.configs['smtp_server']
+        self.i_port = int(config.configs['smtp_port'])
+        self.s_sender_email = config.configs['sender_email']
+        self.s_password = config.configs['smtp_password']
 
     def send_confirmation_email(self, email, username):
 

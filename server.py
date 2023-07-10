@@ -5,8 +5,8 @@ from App.Controller.user_controller import User
 from App.Controller import get_request
 from App.Controller import send_request
 from App.Controller import process
-from App.jwt import Token
-from App.Controller import db_controller as db
+from App.Controller.jwt import Token
+from App.Controller import db_postgres_controller as db
 from datetime import datetime
 import sys
 import json
@@ -22,7 +22,7 @@ app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
 
 
 # Signup user
-@app.route('/signup', methods=['GET' , 'POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
     
     # Retrieve data from the body and header
@@ -40,7 +40,7 @@ def signup():
 
 
 # To accept the link confirmation request
-@app.route('/confirm', methods=['GET' , 'POST'])
+@app.route('/confirm', methods=['GET'])
 def _check_confirm():
     res = Email.check_confirm_email()
     if res == 'True':
@@ -81,7 +81,7 @@ def add():
         # Token is valid
         user_id = int(result)
         s_req_id = add_to_db(user_id) 
-                       
+
         # Send request to queue
         send_request.send(s_req_id)        
         res = process.result(s_req_id,user_id)

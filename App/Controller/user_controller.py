@@ -1,5 +1,5 @@
 from App.Controller.email_controller import Email
-from App.Controller import db_controller as db
+from App.Controller import db_postgres_controller as db
 from App.Controller.validation import Valid
 import hashlib
 
