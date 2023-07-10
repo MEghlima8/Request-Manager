@@ -10,7 +10,7 @@ def main():
 
     # Whenever we receive a message, this callback function is called
     def callback(ch, method, properties, body):
-        print(".................. Received ..................")
+        print(".................. Received .................. %r" % body.decode())
         
         proc_res = process(int(body.decode()))
         return proc_res

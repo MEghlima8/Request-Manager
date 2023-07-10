@@ -85,7 +85,6 @@ def add():
         # Send request to queue
         send_request.send(s_req_id)        
         res = process.result(s_req_id,user_id)
-        print('s_req_id,user_id: ',s_req_id,user_id)
         try:            
             if res == 'None' :                
                 # add request accepted but not processed yet 
@@ -111,7 +110,7 @@ def get_result():
     try:        
         # Token is valid
         user_id = int(result)                
-        res = process.result(s_req_id,user_id)        
+        res = process.result(s_req_id,user_id)      
         return res
     except:
         # Token is invalid.        
@@ -128,11 +127,8 @@ def add_to_db(user_id):
     ip =  request.remote_addr
     time = str(datetime.now())
     
-    query = "INSERT INTO request (user_id,type,params,time,agent,method,ip) VALUES (%s , %s , %s , %s , %s , %s , %s)"
-    db.db.execute( query , (user_id, type, j_params, time, agent, method, ip))
-    
-    query = "SELECT id FROM request ORDER BY id DESC LIMIT 1"
-    req_id = db.db.execute(query , ()).fetchall()[0][0]
+    query = "INSERT INTO request (user_id,type,params,time,agent,method,ip) VALUES (%s , %s , %s , %s , %s , %s , %s) RETURNING id"
+    req_id = db.db.execute( query , (user_id, type, j_params, time, agent, method, ip)).fetchall()[0][0]
     return str(req_id)
 
 
