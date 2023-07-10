@@ -11,8 +11,8 @@ class Token :
     
         self.secret_key = 'Djlea@2guz@.QaFsn'
     
-    def encode_token(self):
-             
+    
+    def encode_token(self):         
         # Get the current datetime
         current_datetime = datetime.datetime.utcnow()
         # Add 2 days to the current datetime
@@ -68,7 +68,6 @@ class Token :
             # Decode the JWT and get the payload and header
             payload = jwt.decode(self.token, self.secret_key, algorithms=['HS256'])
             # header = jwt.get_unverified_header(self.token)
-            
             return payload
             
         except jwt.DecodeError:

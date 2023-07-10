@@ -15,12 +15,5 @@ configs = {
     'DB_HOST' : os.getenv('DB_HOST') ,
     'DB_USER' : os.getenv('DB_USER') ,
     'DB_PASSWORD' : os.getenv('DB_PASSWORD') ,
-    'DB_PORT' : os.getenv('DB_PORT') ,
-    
-    'SESSION_TYPE' : os.getenv('SESSION_TYPE') ,
-    # Redis
-    'REDIS_HOST' : os.getenv('REDIS_HOST') ,
-    'REDIS_PORT' : os.getenv('REDIS_PORT') ,
-    'REDIS_PASSWORD' : os.getenv('REDIS_PASSWORD') ,
-    'REDIS_DB_NUMBER' : os.getenv('REDIS_DB_NUMBER')
+    'DB_PORT' : os.getenv('DB_PORT')
 }

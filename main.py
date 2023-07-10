@@ -1,5 +1,5 @@
 from App import config
-from flask import Flask, request, render_template, make_response, abort
+from flask import Flask, request
 from App.Controller.email_controller import Email
 from App.Controller.user_controller import User
 from App.Controller import get_request
@@ -7,8 +7,6 @@ from App.Controller import send_request
 from App.Controller import process
 from App.jwt import Token
 from App.Controller import db_controller as db
-import time
-from functools import wraps
 from datetime import datetime
 import sys
 import json

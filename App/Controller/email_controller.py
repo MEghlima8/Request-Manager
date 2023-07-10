@@ -1,4 +1,4 @@
-from flask import request, render_template,abort
+from flask import request
 from App.Controller import db_controller as db
 import smtplib
 import ssl

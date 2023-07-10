@@ -1,12 +1,7 @@
-from flask import request ,make_response
 from App.Controller.email_controller import Email
 from App.Controller import db_controller as db
-import secrets
-import json
 from App.Controller.validation import Valid
-# from App.logs import Log
 import hashlib
-import uuid
 
 
 class User:
@@ -100,11 +95,3 @@ class User:
                 return True  
             return 'noactive'
         return False
-
-
-    # Getback user_info
-    @staticmethod
-    def get_user_info(l_data_request):        
-        user_info = request.data.decode('utf-8')
-        user_info = json.loads(user_info)        
-        return [user_info[req] for req in l_data_request]
