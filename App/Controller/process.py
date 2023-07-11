@@ -50,16 +50,20 @@ def result(s_req_id,user_id):
         # Now , check is there in request table or not
         query = "SELECT * FROM request WHERE user_id=%s AND id=%s"
         res = db.db.execute(query, (user_id, s_req_id)).fetchall()
+        
         if res == []:
             # There is no the request in request table
-            res = {"status":"not accepted" , "result":"request id is wrong"}
+            res = {"status":"not accepted" , "result":"request id is wrong" , "status-code":400}
         else:
-            res = {"status":"accepted" , "result":"request is in queue" , "request_id":res[0][0]}
+            res = {"status":"accepted" , "result":"request is in queue" , "request_id":res[0][0] , "status-code":202}
         return res
     
     elif res[0][0] is None or res[0][1] != 'done' :
-        return 'None'
+        # request accepted but not processed yet 
+        res = {"status":"accepted" , "result":"not processed yet" , "request_id":s_req_id , "status-code":202}
+        return res
 
     # There is process in process db table
-    res = res[0][0]
+    res = {"status":"done" , "result":res[0][0]["result"] , "status-code":200}
+    
     return res

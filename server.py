@@ -33,9 +33,9 @@ def signup():
     s_user = o_user.signup()
     
     if s_user == 'True':
-        res = {"status":"accepted" , "result":"done"}
+        res = {"status":"success" , "result":"done" , "status-code":201}
     else:
-        res = {"status":"not accepted" , "result":s_user}
+        res = {"status":"not accepted" , "result":s_user , "status-code":400}
     return res
 
 
@@ -44,9 +44,9 @@ def signup():
 def _check_confirm():
     res = Email.check_confirm_email()
     if res == 'True':
-        res = {"status":"accepted" , "result":"email is verified"}
+        res = {"status":"accepted" , "result":"email is verified" , "status-code":200}
     else :
-        res = {"status":"not accepted" , "result":"link is not valid"}
+        res = {"status":"not accepted" , "result":"link is not valid" , "status-code":400}
     return res
 
 
@@ -64,9 +64,11 @@ def signin():
     if o_user == 'True':
         o_token = Token(username=s_username)
         s_token = o_token.encode_token()
-        res = {"status":"accepted" , "result":{"token":s_token}}
+        res = {"status":"accepted" , "result":{"token":s_token} , "status-code":200}
+    elif o_user == 'noactive' :
+        res = {"status":"not accepted" , "result":'your account is not active' , "status-code":403}
     else:
-        res = {"status":"not accepted" , "result":o_user}
+        res = {"status":"not accepted" , "result":o_user , "status-code":401}
     return res
 
 
@@ -85,15 +87,10 @@ def add():
         # Send request to queue
         send_request.send(s_req_id)        
         res = process.result(s_req_id,user_id)
-        try:            
-            if res == 'None' :                
-                # add request accepted but not processed yet 
-                res = {"status":"accepted" , "result":"not processed yet" , "request_id":s_req_id}
-        finally:            
-            return res
+        return res
     except:        
         # Token is invalid.
-        res = {"status":"not accepted" , "result":result}        
+        res = {"status":"not accepted" , "result":result , "status-code":401}        
         return res
 
 
@@ -110,11 +107,11 @@ def get_result():
     try:        
         # Token is valid
         user_id = int(result)                
-        res = process.result(s_req_id,user_id)      
+        res = process.result(s_req_id,user_id)
         return res
     except:
         # Token is invalid.        
-        res = {"status":"not accepted" , "result":result}   
+        res = {"status":"not accepted" , "result":result , "status-code":401}   
         return res   
 
 
