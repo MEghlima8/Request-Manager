@@ -32,7 +32,7 @@ class Valid:
         if len(self.username) > 30:
             return 'username_length'  # username length is must be less than 30 letters
         
-        username_allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._')
+        username_allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._0123456789')
         if not set(self.username).issubset(username_allowed_chars):
             return 'char_username' # username chars is not valid
     

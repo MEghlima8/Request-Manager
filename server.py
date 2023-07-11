@@ -40,7 +40,7 @@ def signup():
 
 
 # To accept the link confirmation request
-@app.route('/confirm', methods=['GET'])
+@app.route('/confirm', methods=['POST'])
 def _check_confirm():
     res = Email.check_confirm_email()
     if res == 'True':
