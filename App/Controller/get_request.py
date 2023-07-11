@@ -1,8 +1,10 @@
 import pika
 from App.Controller.process import process
+from App import config
 
 def main():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    host = config.configs['HOST']
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
     channel = connection.channel()
 
     # It will create a queue if doesn't exist. To be sure there is queue

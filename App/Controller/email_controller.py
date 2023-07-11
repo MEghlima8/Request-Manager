@@ -13,10 +13,10 @@ from App import config
 class Email:
     
     def  __init__(self):
-        self.s_smtp_server = config.configs['smtp_server']
-        self.i_port = int(config.configs['smtp_port'])
-        self.s_sender_email = config.configs['sender_email']
-        self.s_password = config.configs['smtp_password']
+        self.s_smtp_server = config.configs['SMTP_SERVER']
+        self.i_port = int(config.configs['SMTP_PORT'])
+        self.s_sender_email = config.configs['SENDER_EMAIL']
+        self.s_password = config.configs['SMTP_PASSWORD']
 
     def send_confirmation_email(self, email, username):
 
@@ -30,9 +30,10 @@ class Email:
         
         
     def send_confirmation_link_multiThread(self, email, username, s_link_key ):
-                
+        host = config.configs['HOST']
+        port = config.configs['PORT']
         # The link to which the confirmation request will be emailed
-        s_link = 'http://localhost:5000/confirm?link=%s' % s_link_key
+        s_link = 'http://%s:%s/confirm?link=%s' % (host,port,s_link_key)
         
         msg = MIMEMultipart('alternative')
         msg['Subject'] = "Confirmation Link"
@@ -63,13 +64,10 @@ class Email:
     @staticmethod
     def check_confirm_email():
         s_link = request.get_json()['confirm_link']
-        
-        query = 'select confirm_link from users where confirm_link=%s'
-        is_exist = db.execute(query,(s_link,)).fetchone()
+        is_exist = db.db.getUserConfirmLink(s_link)
         
         if is_exist is not None :
-            query = 'UPDATE users SET active=%s  where confirm_link=%s'
-            db.execute(query, ('true',s_link,))
+            db.db.activeUser(s_link)
             return 'True'
         
         # Confirm link in wrong
@@ -79,8 +77,8 @@ class Email:
     @staticmethod
     def is_exist_email(email):        
         # Getback users info
-        query = 'select active from users where email=%s'
-        l_users_info = db.execute(query ,(email,)).fetchone()        
+        l_users_info = db.db.getActiveFromUsers(email)
+
         if l_users_info is None :    
             return False
         elif l_users_info[0] == True:            

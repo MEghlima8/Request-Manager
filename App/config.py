@@ -18,11 +18,11 @@ configs = {
     'DB_PORT' : os.getenv('DB_PORT') ,
     
     # JWT
-    'jwt_secret_key' : os.getenv('JWT_SECRET_KEY') ,
+    'JWT_SECRET_KEY' : os.getenv('JWT_SECRET_KEY') ,
     
     # Email
-    'smtp_server' : os.getenv('SMTP_SERVER') ,
-    'smtp_port' : os.getenv('SMTP_PORT') ,
-    'sender_email' : os.getenv('SENDER_EMAIL') ,
-    'smtp_password': os.getenv('SMTP_PASSWORD') ,
+    'SMTP_SERVER' : os.getenv('SMTP_SERVER') ,
+    'SMTP_PORT' : os.getenv('SMTP_PORT') ,
+    'SENDER_EMAIL' : os.getenv('SENDER_EMAIL') ,
+    'SMTP_PASSWORD': os.getenv('SMTP_PASSWORD') ,
 }

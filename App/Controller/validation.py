@@ -7,7 +7,7 @@ class Valid:
         self.username = username        
         self.email = email
         self.password = password
-        
+            
         
     # Check email is valid or not
     def is_valid_email(self):

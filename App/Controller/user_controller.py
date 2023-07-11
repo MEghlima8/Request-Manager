@@ -24,16 +24,20 @@ class User:
         
         # To save password in database as hash.
         password = hashlib.md5(self.password.encode('utf-8')).hexdigest()
-        
-        query = 'insert into users (username,email,password,active,confirm_link) values( %s , %s , %s , false , %s)'
-        db.execute(query , (self.username, self.email, password, s_confirmation_link,))
+        db.db.signupUser(self.username, self.email, password, s_confirmation_link)
         return 'True'
     
     
     def is_valid_signup(self):
         
+        # Check duplicate username
+        check_exist_username = db.db.checkDuplicateUsername(self.username)
+        if check_exist_username == 'True':
+            return 'duplicate_username'
+
+        
         # Check duplicate email
-        check_exist_email = Email.is_exist_email(self.email)        
+        check_exist_email = Email.is_exist_email(self.email)
         if check_exist_email is None :
             return False
         elif check_exist_email == True :
@@ -50,7 +54,7 @@ class User:
         if (valid_info == 'password_length') or (valid_info == 'char_password') or (valid_info == 'empty_password') or (valid_info == 'used_info_in_password') :        
             return valid_info        
         
-        if (valid_info == 'length_username') or (valid_info == 'char_username') or (valid_info == 'empty_username') :        
+        if (valid_info == 'length_username') or (valid_info == 'char_username') or (valid_info == 'empty_username') or (valid_info == 'duplicate_username') :        
             return valid_info        
         
         if (valid_info == 'no_match_passwords'):        
@@ -83,11 +87,10 @@ class User:
         elif (valid_info=='username_length') or (valid_info=='char_username') or (valid_info=='password_length') or (valid_info=='char_password'):
             return False
         
-        # Getback users info
+        # Get users info
         hash_password = hashlib.md5(self.password.encode('utf-8')).hexdigest()
         
-        s_query = 'select username,password,active from users where username=%s and password=%s'
-        l_user_info = db.execute(s_query ,(self.username,hash_password,)).fetchone()
+        l_user_info = db.db.checkSigninInfo(self.username,hash_password)
 
         # i[0] is username and i[1] is password and i[2] is active column
         if l_user_info is not None:

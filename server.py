@@ -44,7 +44,7 @@ def signup():
 def _check_confirm():
     res = Email.check_confirm_email()
     if res == 'True':
-        res = {"status":"accepted" , "result":"email is verified" , "status-code":200}
+        res = {"status":"accepted" , "result":"email verified now" , "status-code":200}
     else :
         res = {"status":"not accepted" , "result":"link is not valid" , "status-code":400}
     return res
@@ -78,11 +78,11 @@ def add():
     s_token = request.headers.get('Authorization')
         
     # Get id
-    result = Token(token=s_token).handle_token()        
-    try:        
+    result = Token(token=s_token).handle_token()     
+    try:                
         # Token is valid
         user_id = int(result)
-        s_req_id = add_to_db(user_id) 
+        s_req_id = add_to_db(user_id)        
 
         # Send request to queue
         send_request.send(s_req_id)        
@@ -103,7 +103,7 @@ def get_result():
     s_token = request.headers.get('Authorization')
     
     # Get id
-    result = Token(token=s_token).handle_token()        
+    result = Token(token=s_token).handle_token()
     try:        
         # Token is valid
         user_id = int(result)                
@@ -124,10 +124,9 @@ def add_to_db(user_id):
     ip =  request.remote_addr
     time = str(datetime.now())
     
-    query = "INSERT INTO request (user_id,type,params,time,agent,method,ip) VALUES (%s , %s , %s , %s , %s , %s , %s) RETURNING id"
-    req_id = db.db.execute( query , (user_id, type, j_params, time, agent, method, ip)).fetchall()[0][0]
+    req_id = db.db.addReqToDb(user_id, type, j_params, time, agent, method, ip)
+    
     return str(req_id)
-
 
 # receive request from queue 
 def get_requests_from_queue():

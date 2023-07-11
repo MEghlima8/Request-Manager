@@ -11,7 +11,7 @@ class Token :
         self.token = token
     
         # Set jwt secret key
-        self.secret_key = config.configs['jwt_secret_key']
+        self.secret_key = config.configs['JWT_SECRET_KEY']
     
     
     def encode_token(self):         
@@ -33,16 +33,10 @@ class Token :
             'alg': 'HS256',
             'typ': 'JWT',
         }
-
-
         # Encode the JWT with custom header and payload
         s_token = jwt.encode(payload, self.secret_key, algorithm='HS256', headers=header)
         
-        
-        # Add token to database
-        query = 'UPDATE users SET token=%s where username=%s'
-        db.db.execute(query, (s_token,self.username,))
-        
+        db.db.addTokenToDb(s_token, self.username,)
         return s_token
     
     
@@ -58,8 +52,7 @@ class Token :
         if exp_time < current_datetime :
             return 'ExpiredToken'
         
-        query = 'select id from users where username=%s'
-        get_id = db.db.execute(query, (username,)).fetchone()
+        get_id = db.db.getUserId(username)
         return str(get_id[0])
         
         
