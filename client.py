@@ -17,9 +17,12 @@ def add_argument_parser():
         ['--email', 'your email'],
         ['--size', 'requests size'],
         ['--host', 'host'],
-        ['--port', 'port']
+        ['--port', 'port'],
+        ['--url', 'your image url'],
+        ['--text', 'your text to hide in image '],
     ]
     
+    # ex: '--text', 'your text to hide in image '
     for arg,help in arguments:
       parser.add_argument(arg, help=help)  
     return
@@ -72,7 +75,22 @@ def signup_route(req_size, host, port):
     args = parser.parse_args()
     data = {"username": args.username,"password": args.password,"email": args.email}
     send_multiple_requests(data, req_size, 'signup', host, port)
-   
+
+# hide text
+def hide_text(req_size, host, port):
+    args = parser.parse_args()
+    data = {"params":{"url": args.url, "text": args.text}} 
+    headers = {'Authorization': args.token}
+    send_multiple_requests(data, req_size, 'hide-text', host, port, headers)
+    
+
+# get text
+def get_text(req_size, host, port):
+    args = parser.parse_args()
+    data = {"params":{"url": args.url}} 
+    headers = {'Authorization': args.token}
+    send_multiple_requests(data, req_size, 'get-text', host, port, headers)    
+    
     
 def main():
     add_argument_parser()
@@ -80,8 +98,11 @@ def main():
     host = parser.parse_args().host
     port = parser.parse_args().port
     route = parser.parse_args().route
-    req_size = int(parser.parse_args().size)
-    
+    try:
+        req_size = int(parser.parse_args().size)
+    except:
+        req_size = 1
+        
     if host is None:
         host = 'localhost'
     if port is None:
@@ -103,6 +124,12 @@ def main():
         
     elif route == 'signup':
         signup_route(req_size, host, port)
+        
+    elif route == 'hide-text':
+        hide_text(req_size, host, port)
+    
+    elif route == 'get-text':
+        get_text(req_size, host, port)
     
     else:
         print("Invalid Route")

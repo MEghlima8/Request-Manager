@@ -25,4 +25,7 @@ configs = {
     'SMTP_PORT' : os.getenv('SMTP_PORT') ,
     'SENDER_EMAIL' : os.getenv('SENDER_EMAIL') ,
     'SMTP_PASSWORD': os.getenv('SMTP_PASSWORD') ,
+    
+    'UPLOAD_IMAGE_BEFORE_HIDE' : os.getenv('UPLOAD_IMAGE_BEFORE_HIDE') ,
+    'UPLOAD_IMAGE_AFTER_HIDE' : os.getenv('UPLOAD_IMAGE_AFTER_HIDE') ,
 }

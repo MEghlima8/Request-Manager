@@ -1,6 +1,8 @@
 import pika
 from App.Controller.process import process
 from App import config
+import sys
+import os
 
 def main():
     host = config.configs['HOST']
@@ -20,3 +22,15 @@ def main():
     channel.basic_consume(queue='requests', on_message_callback=callback, auto_ack=True)
 
     channel.start_consuming()
+    
+
+# receive request from queue 
+def get_requests_from_queue():
+    try:
+        main()
+    except KeyboardInterrupt:
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
+    

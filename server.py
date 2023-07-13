@@ -8,10 +8,9 @@ from App.Controller import process
 from App.Controller.jwt import Token
 from App.Controller import db_postgres_controller as db
 from datetime import datetime
-import sys
 import json
 import threading
-import os
+import time
 
 
 app = Flask(__name__)
@@ -30,12 +29,12 @@ def signup():
     # header_data = request.headers
     
     o_user = User(body_data['username'] , body_data['email'] , body_data['password'])
-    s_user = o_user.signup()
+    j_user = o_user.signup()
     
-    if s_user == 'True':
-        res = {"status":"success" , "result":"done" , "status-code":201}
+    if j_user["status"] == "True":
+        res = {"status":"success" , "result":"done" , "status-code":201 , "confirm_link":j_user["result"] }
     else:
-        res = {"status":"not accepted" , "result":s_user , "status-code":400}
+        res = {"status":"not accepted" , "result":j_user["result"] , "status-code":400}
     return res
 
 
@@ -75,23 +74,76 @@ def signin():
 @app.route('/add', methods=['POST'])
 def add():    
     # Get Token
-    s_token = request.headers.get('Authorization')
-        
+    try:
+        s_token = request.headers.get('Authorization').split()[1]
+    except:
+        s_token = request.headers.get('Authorization')
     # Get id
-    result = Token(token=s_token).handle_token()     
+    result = Token(token=s_token).handle_token()
     try:                
-        # Token is valid
+        # Check Token is valid
         user_id = int(result)
         s_req_id = add_to_db(user_id)        
-
+        
         # Send request to queue
-        send_request.send(s_req_id)        
+        send_request.send(s_req_id)
         res = process.result(s_req_id,user_id)
+
         return res
-    except:        
+    except:
         # Token is invalid.
         res = {"status":"not accepted" , "result":result , "status-code":401}        
         return res
+
+
+
+@app.route('/hide-text', methods=['POST'])
+def hide_text():
+    # Get Token
+    try:
+        s_token = request.headers.get('Authorization').split()[1]
+    except:
+        s_token = request.headers.get('Authorization')
+    # Get id
+    result = Token(token=s_token).handle_token()
+    
+    try:    
+        # Check Token is valid
+        user_id = int(result)
+        s_req_id = add_to_db(user_id)      
+    except:
+        # Token is invalid.
+        res = {"status":"not accepted" , "result":result , "status-code":401}        
+        return res
+    
+    # Send request to queue
+    send_request.send(s_req_id)
+    res = process.result(s_req_id,user_id)
+    return res
+
+
+@app.route('/get-text', methods=['POST'])
+def get_text():    
+    # Get Token
+    try:
+        s_token = request.headers.get('Authorization').split()[1]
+    except:
+        s_token = request.headers.get('Authorization')
+    # Get id
+    result = Token(token=s_token).handle_token()    
+    try:    
+        # Check Token is valid
+        user_id = int(result)        
+        s_req_id = add_to_db(user_id)
+    except:
+        # Token is invalid.
+        res = {"status":"not accepted" , "result":result , "status-code":401}        
+        return res    
+    # Send request to queue
+    send_request.send(s_req_id)    
+    res = process.result(s_req_id,user_id)    
+    return res
+
 
 
 @app.route('/get-result' , methods=['POST'])
@@ -100,7 +152,10 @@ def get_result():
     s_req_id = request.get_json()["request_id"]    
     
     # Get Token
-    s_token = request.headers.get('Authorization')
+    try:
+        s_token = request.headers.get('Authorization').split()[1]
+    except:
+        s_token = request.headers.get('Authorization')
     
     # Get id
     result = Token(token=s_token).handle_token()
@@ -128,20 +183,8 @@ def add_to_db(user_id):
     
     return str(req_id)
 
-# receive request from queue 
-def get_requests_from_queue():
-    try:
-        get_request.main()
-    except KeyboardInterrupt:
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
-    
 
 if __name__ == '__main__':
-
-    t = threading.Thread(None, get_requests_from_queue, None, ())
+    t = threading.Thread(None, get_request.get_requests_from_queue, None, ())
     t.start()
     app.run(host=config.configs['HOST'], port=config.configs['PORT'] , debug=config.configs['DEBUG'])
-    

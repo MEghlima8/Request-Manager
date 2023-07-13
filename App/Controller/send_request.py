@@ -1,7 +1,9 @@
 import pika
+from App import config
 
 def send(val):
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    host = config.configs['HOST']
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host))
     channel = connection.channel()
 
     channel.queue_declare(queue='requests')
