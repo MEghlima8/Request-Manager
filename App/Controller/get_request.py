@@ -6,7 +6,7 @@ import os
 
 def main():
     host = config.configs['RABBITMQ_SERVICE_NAME']
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
 
     # It will create a queue if doesn't exist. To be sure there is queue

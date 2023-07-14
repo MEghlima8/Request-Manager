@@ -104,7 +104,7 @@ def hide_text(info):
     
     os.remove(os.path.join(config.configs["UPLOAD_IMAGE_BEFORE_HIDE"], img_name))
     
-    res = {"result":{"url":f'http://127.0.0.1:80/static/images/afterHide/{img_name}'}}
+    res = {"result":{"url":f'http://127.0.0.1:5000/static/images/afterHide/{img_name}'}}
     res = json.dumps(res)
     return res
 
