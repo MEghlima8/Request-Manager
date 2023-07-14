@@ -135,6 +135,18 @@ class PostgreSQL:
         if res != None:
             return 'True'
         return None
+    
+    def getImagesName(self, s_req_id):
+        query = "SELECT user_id FROM request WHERE id=%s"
+        args = (int(s_req_id),)
+        user_id = self.execute_query(query,args).fetchall()[0][0]
+
+        query = "SELECT result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.type=%s"
+        args = (user_id,'/hide-text')
+        res = self.execute_query(query,args).fetchall()
+
+        return res
+
         
 
 db = PostgreSQL(host=host, database=database, user=user, password=password, port=port)

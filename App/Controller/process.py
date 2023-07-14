@@ -8,6 +8,8 @@ from App import config
 import requests 
 from PIL import Image
 from io import BytesIO
+import mimetypes
+
 
 def process(req_id):
     
@@ -19,7 +21,7 @@ def process(req_id):
     
     # Get route and params
     req_info = db.db.getReqInfo(req_id)
-
+    
     route = req_info[0][2]
     if route == '/add':
         result = add(req_info[0])
@@ -27,6 +29,8 @@ def process(req_id):
         result = hide_text(req_info[0])
     elif route == '/get-text':        
         result = get_text(req_info[0])
+    elif route == '/get-size':
+        result = get_size(req_info[0])
     
     # end time
     end_time = datetime.now()
@@ -35,12 +39,32 @@ def process(req_id):
     return 'true'
 
 
+def get_size(info):
+    images_folder = config.configs["UPLOAD_IMAGE_AFTER_HIDE"]
+    imgs_name = db.db.getImagesName(info[0])
+    total_size = 0
+    
+    for file_dir in imgs_name:
+        filename = file_dir[0]["result"]["url"].split('/')[-1]
+        file_path = os.path.join(images_folder, filename)
+        total_size += os.path.getsize(file_path)
+        
+    res = {"result":{"total_size":total_size}}
+    
+    res = json.dumps(res)
+    return res
+
+
 def get_text(info):
-    image_url = info[3]["url"]    
-    # Get image from URL
-    response = requests.get(image_url)
-    image_content = response.content
-    image = Image.open(BytesIO(image_content))    
+    try:
+        image_url = info[3]["url"]
+        # Get image from URL
+        response = requests.get(image_url)
+        image_content = response.content
+        image = Image.open(BytesIO(image_content))    
+    except:
+        image_url = info[3]["path"]
+        image = Image.open(image_url)
     
     try:
         text = lsb.reveal(image)
@@ -54,13 +78,17 @@ def get_text(info):
 
 def hide_text(info):
     text = info[3]["text"]
-    image_url = info[3]["url"]
-    
-    # Get image from URL
-    response = requests.get(image_url)
-    mime_type = response.headers.get("content-type")
-    image_content = response.content
-    image = Image.open(BytesIO(image_content))
+    try:
+        image_url = info[3]["url"]
+        # Get image from URL
+        response = requests.get(image_url)
+        mime_type = response.headers.get("content-type")
+        image_content = response.content
+        image = Image.open(BytesIO(image_content))    
+    except:
+        image_path = info[3]["path"]
+        image = Image.open(image_path)
+        mime_type, _ = mimetypes.guess_type(image_path)
     
     img_uuid = uuid.uuid4().hex
     
@@ -75,7 +103,8 @@ def hide_text(info):
     secret_img.save(os.path.join(config.configs["UPLOAD_IMAGE_AFTER_HIDE"], img_name))
     
     os.remove(os.path.join(config.configs["UPLOAD_IMAGE_BEFORE_HIDE"], img_name))
-    res = {"result":{"url":f'http://127.0.0.1/static/images/afterHide/{img_name}'}}
+    
+    res = {"result":{"url":f'http://127.0.0.1:80/static/images/afterHide/{img_name}'}}
     res = json.dumps(res)
     return res
 

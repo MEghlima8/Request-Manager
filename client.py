@@ -20,6 +20,7 @@ def add_argument_parser():
         ['--port', 'port'],
         ['--url', 'your image url'],
         ['--text', 'your text to hide in image '],
+        ['--path', 'Your image path '],
     ]
     
     # ex: '--text', 'your text to hide in image '
@@ -79,7 +80,7 @@ def signup_route(req_size, host, port):
 # hide text
 def hide_text(req_size, host, port):
     args = parser.parse_args()
-    data = {"params":{"url": args.url, "text": args.text}} 
+    data = {"params":{"url": args.url, "path":args.path , "text": args.text}} 
     headers = {'Authorization': args.token}
     send_multiple_requests(data, req_size, 'hide-text', host, port, headers)
     
@@ -87,9 +88,16 @@ def hide_text(req_size, host, port):
 # get text
 def get_text(req_size, host, port):
     args = parser.parse_args()
-    data = {"params":{"url": args.url}} 
+    data = {"params":{"url": args.url , "path":args.path}} 
     headers = {'Authorization': args.token}
     send_multiple_requests(data, req_size, 'get-text', host, port, headers)    
+    
+# get size
+def get_size(req_size, host, port):
+    args = parser.parse_args()
+    data = {} 
+    headers = {'Authorization': args.token}
+    send_multiple_requests(data, req_size, 'get-size', host, port, headers)    
     
     
 def main():
@@ -130,6 +138,9 @@ def main():
     
     elif route == 'get-text':
         get_text(req_size, host, port)
+        
+    elif route == 'get-size':
+        get_size(req_size, host, port)
     
     else:
         print("Invalid Route")

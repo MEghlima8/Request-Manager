@@ -97,6 +97,29 @@ def add():
 
 
 
+@app.route('/get-size', methods=['POST'])
+def get_size():    
+    try:
+        s_token = request.headers.get('Authorization').split()[1]        
+    except:
+        s_token = request.headers.get('Authorization')        
+    # Get id
+    result = Token(token=s_token).handle_token()    
+    try:            
+        # Check Token is valid
+        user_id = int(result)        
+        s_req_id = add_to_db(user_id)        
+    except:        
+        # Token is invalid.
+        res = {"status":"not accepted" , "result":result , "status-code":401}                
+        return res    
+    # Send request to queue
+    send_request.send(s_req_id)
+    res = process.result(s_req_id,user_id)
+    return res    
+    
+    
+
 @app.route('/hide-text', methods=['POST'])
 def hide_text():
     # Get Token
@@ -130,7 +153,8 @@ def get_text():
     except:
         s_token = request.headers.get('Authorization')
     # Get id
-    result = Token(token=s_token).handle_token()    
+    result = Token(token=s_token).handle_token()
+        
     try:    
         # Check Token is valid
         user_id = int(result)        
@@ -172,7 +196,10 @@ def get_result():
 
 def add_to_db(user_id): 
     type = request.path # ex: /add
-    params = request.get_json()["params"]
+    try:
+        params = request.get_json()["params"]
+    except:
+        params = {"params":"None"}
     j_params = json.dumps(params)    
     agent = request.headers['User-Agent']
     method = request.method
@@ -185,6 +212,7 @@ def add_to_db(user_id):
 
 
 if __name__ == '__main__':
+    time.sleep(10)
     t = threading.Thread(None, get_request.get_requests_from_queue, None, ())
     t.start()
     app.run(host=config.configs['HOST'], port=config.configs['PORT'] , debug=config.configs['DEBUG'])

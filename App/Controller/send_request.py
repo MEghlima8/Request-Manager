@@ -2,7 +2,7 @@ import pika
 from App import config
 
 def send(val):
-    host = config.configs['HOST']
+    host = config.configs['RABBITMQ_SERVICE_NAME']
     connection = pika.BlockingConnection(pika.ConnectionParameters(host))
     channel = connection.channel()
 
