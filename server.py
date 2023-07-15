@@ -10,7 +10,6 @@ from App.Controller import db_postgres_controller as db
 from datetime import datetime
 import json
 import threading
-import time
 
 
 app = Flask(__name__)
@@ -18,6 +17,27 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = int(config.configs['SEND_FILE_MAX_AGE_DEFAULT'])
 app.secret_key = config.configs['SECRET_KEY']
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
+
+
+
+def check_token():
+    # Get Token
+    try:
+        s_token = request.headers.get('Authorization').split()[1]
+    except:
+        s_token = request.headers.get('Authorization')
+    # Get id
+    result = Token(token=s_token).handle_token()
+        
+    try:    
+        # Check Token is valid
+        user_id = int(result)        
+        s_req_id = add_to_db(user_id)
+        res = {"status":"accepted" , "result":{"request_id":s_req_id, "user_id":user_id} , "status-code":200}
+    except:
+        # Token is invalid.
+        res = {"status":"not accepted" , "result":result , "status-code":401}
+    return res    
 
 
 # Signup user
@@ -73,99 +93,57 @@ def signin():
 
 @app.route('/add', methods=['POST'])
 def add():    
-    # Get Token
-    try:
-        s_token = request.headers.get('Authorization').split()[1]
-    except:
-        s_token = request.headers.get('Authorization')
-    # Get id
-    result = Token(token=s_token).handle_token()
-    try:                
-        # Check Token is valid
-        user_id = int(result)
-        s_req_id = add_to_db(user_id)        
-        
-        # Send request to queue
-        send_request.send(s_req_id)
-        res = process.result(s_req_id,user_id)
-
-        return res
-    except:
-        # Token is invalid.
-        res = {"status":"not accepted" , "result":result , "status-code":401}        
-        return res
-
+    res = check_token()
+    if res["status"] == "accepted":
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
+    return res
 
 
 @app.route('/get-size', methods=['POST'])
 def get_size():    
-    try:
-        s_token = request.headers.get('Authorization').split()[1]        
-    except:
-        s_token = request.headers.get('Authorization')        
-    # Get id
-    result = Token(token=s_token).handle_token()    
-    try:            
-        # Check Token is valid
-        user_id = int(result)        
-        s_req_id = add_to_db(user_id)        
-    except:        
-        # Token is invalid.
-        res = {"status":"not accepted" , "result":result , "status-code":401}                
-        return res    
-    # Send request to queue
-    send_request.send(s_req_id)
-    res = process.result(s_req_id,user_id)
+    res = check_token()
+    if res["status"] == "accepted":
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res    
-    
-    
+
 
 @app.route('/hide-text', methods=['POST'])
 def hide_text():
-    # Get Token
-    try:
-        s_token = request.headers.get('Authorization').split()[1]
-    except:
-        s_token = request.headers.get('Authorization')
-    # Get id
-    result = Token(token=s_token).handle_token()
-    
-    try:    
-        # Check Token is valid
-        user_id = int(result)
-        s_req_id = add_to_db(user_id)      
-    except:
-        # Token is invalid.
-        res = {"status":"not accepted" , "result":result , "status-code":401}        
-        return res
-    
-    # Send request to queue
-    send_request.send(s_req_id)
-    res = process.result(s_req_id,user_id)
+    res = check_token()
+    if res["status"] == "accepted":
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res
 
 
 @app.route('/get-text', methods=['POST'])
 def get_text():    
-    # Get Token
-    try:
-        s_token = request.headers.get('Authorization').split()[1]
-    except:
-        s_token = request.headers.get('Authorization')
-    # Get id
-    result = Token(token=s_token).handle_token()
-        
-    try:    
-        # Check Token is valid
-        user_id = int(result)        
-        s_req_id = add_to_db(user_id)
-    except:
-        # Token is invalid.
-        res = {"status":"not accepted" , "result":result , "status-code":401}        
-        return res    
-    # Send request to queue
-    send_request.send(s_req_id)    
-    res = process.result(s_req_id,user_id)    
+    res = check_token()
+    if res["status"] == "accepted":
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
+    return res
+
+
+
+
+@app.route('/hide-in-sound' , methods=['POST'])
+def hide_in_sound():
+    res = check_token()
+    if res["status"] == "accepted":
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
+    return res
+
+
+@app.route('/get-from-sound' , methods=['POST'])
+def get_from_sound():
+    res = check_token()
+    if res["status"] == "accepted":
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res
 
 

@@ -1,4 +1,5 @@
 from App.Controller import db_postgres_controller as db
+from App.Controller import soundstegano
 from datetime import datetime
 import json
 import uuid
@@ -9,6 +10,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 import mimetypes
+from pydub import AudioSegment
 
 
 def process(req_id):
@@ -27,10 +29,14 @@ def process(req_id):
         result = add(req_info[0])
     elif route == '/hide-text':
         result = hide_text(req_info[0])
-    elif route == '/get-text':        
+    elif route == '/getz-text':        
         result = get_text(req_info[0])
     elif route == '/get-size':
         result = get_size(req_info[0])
+    elif route == '/hide-in-sound':
+        result = hide_in_sound(req_info[0])
+    elif route == '/get-from-sound':
+        result = get_from_sound(req_info[0])
     
     # end time
     end_time = datetime.now()
@@ -105,6 +111,70 @@ def hide_text(info):
     os.remove(os.path.join(config.configs["UPLOAD_IMAGE_BEFORE_HIDE"], img_name))
     
     res = {"result":{"url":f'http://127.0.0.1:5000/static/images/afterHide/{img_name}'}}
+    res = json.dumps(res)
+    return res
+
+
+def hide_in_sound(info):
+    
+    text_to_hide = info[3]["text"]    
+    try:   
+        # Get sound from path
+        url = info[3]["path"]
+        sound_format = url.split('.')[-1]
+    except:
+        # Get sound from url
+        url = info[3]["url"]
+        sound_format = url.split('.')[-1]
+        response = requests.get(url)
+        url = BytesIO(response.content)
+       
+
+    # Get sound Format
+    if sound_format != 'wav':
+        audio = AudioSegment.from_file(url)
+        
+        # Export the MP3 audio to WAV format
+        wav_output_path = config.configs["UPLOAD_SOUND_BEFORE_HIDE"] + uuid.uuid4().hex + '.wav'
+        audio.export(wav_output_path , format='wav')
+        
+        # save wav as stegano audio
+        sound_uuid = soundstegano.encode(wav_output_path, text_to_hide)
+            
+    else :
+        audio = AudioSegment.from_wav(url)
+        
+        # Save WAV in local storage
+        wav_output_path = config.configs["UPLOAD_SOUND_BEFORE_HIDE"] + uuid.uuid4().hex + '.wav'
+        audio.export(wav_output_path , format='wav')
+        
+        # save wav as stegano audio
+        sound_uuid = soundstegano.encode(wav_output_path, text_to_hide)
+
+    sound_name = sound_uuid + '.wav'
+
+    res = {"result":{"url":f'http://127.0.0.1:5000/static/sounds/afterHide/{sound_name}'}}
+    res = json.dumps(res)
+    return res
+
+
+def get_from_sound(info):
+    
+    try:   
+        # Get sound from path
+        url = info[3]["path"]
+        sound_format = url.split('.')[-1]
+    except:
+        # Get sound from url
+        url = info[3]["url"]
+        sound_format = url.split('.')[-1]
+        response = requests.get(url)
+        url = BytesIO(response.content)
+    
+    # save wav as stegano audio
+    hidden_text = soundstegano.decode(url)
+
+    res = {"result":{"url": {"secret text" : hidden_text} }}
     res = json.dumps(res)
     return res
 

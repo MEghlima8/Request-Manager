@@ -82,8 +82,7 @@ def hide_text(req_size, host, port):
     args = parser.parse_args()
     data = {"params":{"url": args.url, "path":args.path , "text": args.text}} 
     headers = {'Authorization': args.token}
-    send_multiple_requests(data, req_size, 'hide-text', host, port, headers)
-    
+    send_multiple_requests(data, req_size, 'hide-text', host, port, headers)    
 
 # get text
 def get_text(req_size, host, port):
@@ -91,6 +90,22 @@ def get_text(req_size, host, port):
     data = {"params":{"url": args.url , "path":args.path}} 
     headers = {'Authorization': args.token}
     send_multiple_requests(data, req_size, 'get-text', host, port, headers)    
+    
+# hide text message in sound
+def hide_in_sound(req_size, host, port):
+    args = parser.parse_args()
+    data = {"params":{"url": args.url , "path":args.path , "text": args.text}} 
+    headers = {'Authorization': args.token}
+    send_multiple_requests(data, req_size, 'hide-in-sound', host, port, headers)    
+
+
+# get text message from sound
+def get_from_sound(req_size, host, port):
+    args = parser.parse_args()
+    data = {"params":{"url": args.url , "path":args.path}} 
+    headers = {'Authorization': args.token}
+    send_multiple_requests(data, req_size, 'get-from-sound', host, port, headers)    
+    
     
 # get size
 def get_size(req_size, host, port):
@@ -141,7 +156,13 @@ def main():
         
     elif route == 'get-size':
         get_size(req_size, host, port)
-    
+        
+    elif route == 'hide-in-sound':
+        hide_in_sound(req_size, host, port)
+        
+    elif route == 'get-from-sound':
+        get_from_sound(req_size, host, port)
+        
     else:
         print("Invalid Route")
         

@@ -26,10 +26,14 @@ configs = {
     'SENDER_EMAIL' : os.getenv('SENDER_EMAIL') ,
     'SMTP_PASSWORD': os.getenv('SMTP_PASSWORD') ,
     
+    # Images
     'UPLOAD_IMAGE_BEFORE_HIDE' : os.getenv('UPLOAD_IMAGE_BEFORE_HIDE') ,
     'UPLOAD_IMAGE_AFTER_HIDE' : os.getenv('UPLOAD_IMAGE_AFTER_HIDE') ,
     
-    # Docker Compose
+    # Sounds
+    'UPLOAD_SOUND_BEFORE_HIDE' : os.getenv('UPLOAD_SOUND_BEFORE_HIDE') ,
+    'UPLOAD_SOUND_AFTER_HIDE' : os.getenv('UPLOAD_SOUND_AFTER_HIDE') ,
     
+    # Docker Compose
     'RABBITMQ_SERVICE_NAME': os.getenv('RABBITMQ_SERVICE_NAME')
 }
