@@ -66,10 +66,6 @@ class User:
             res = {"status":"False" , "result":valid_info}            
             return res
         
-        if (valid_info == 'no_match_passwords'):        
-            res = {"status":"False" , "result":valid_info}            
-            return res
-        
         res = {"status":"True" , "result":valid_info}            
         return res
 

@@ -7,7 +7,6 @@ def encode(pathToAudio,stringToEncode):
     rate,audioData1 = wavfile.read(pathToAudio)
     stringToEncode = stringToEncode.ljust(100, '~')
     textLength = 8 * len(stringToEncode)
-    print(rate)
     chunkSize = int(2 * 2 ** np.ceil(np.log2(2 * textLength)))
     numberOfChunks = int(np.ceil(audioData1.shape[0] / chunkSize))
     audioData = audioData1.copy()
@@ -55,28 +54,25 @@ def encode(pathToAudio,stringToEncode):
     # Combining all block of audio again
     audioData[0] = chunks.ravel().astype(np.int16)    
 
-        # Get uuid to save message as sound
+    # Get uuid to save message as sound
     sound_uuid = uuid.uuid4().hex
     output_path = config.configs["UPLOAD_SOUND_AFTER_HIDE"] + sound_uuid + '.wav'
 
     wavfile.write(output_path, rate, audioData.T)
     
-    return sound_uuid
+    return output_path
 
 
 def decode(audioLocation):
     rate, audioData = wavfile.read(audioLocation)
-    print(rate)
     textLength = 800
     blockLength = 2 * int(2 ** np.ceil(np.log2(2 * textLength)))
     blockMid = blockLength // 2
-    print(blockLength, blockMid)
     # Get header info
     if len(audioData.shape) == 1:
         code = audioData[:blockLength]
     else:
         code = audioData[:blockLength, 0]
-    print(code)
     # Get the phase and convert it to binary
     codePhases = np.angle(np.fft.fft(code))[blockMid - textLength:blockMid]
     codeInBinary = (codePhases < 0).astype(np.int16)

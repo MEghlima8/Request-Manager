@@ -36,7 +36,6 @@ def send_request(url, data, headers):
 
 def send_multiple_requests(data, size, route, host, port, headers=None):
     url = 'http://%s:%s/%s' % (host, port, route)
-    # data = {"params":{"num1": 200, "num2": 3100}} 
     
     for _ in range(size):
         t = threading.Thread(target=send_request, args=(url, data, headers))
@@ -57,7 +56,6 @@ def get_result_route(req_size, host,port):
     data = {"request_id":args.reqid}
     headers = {'Authorization': args.token}
     send_multiple_requests(data, req_size, 'get-result', host, port, headers)
-    
     
 # sign in
 def signin_route(req_size, host, port):

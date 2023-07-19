@@ -40,7 +40,7 @@ class Email:
         msg['From'] = self.s_sender_email
         msg['To'] = email
         
-        s_text = '''Hello {username} , Click on the below link to confirm your email ,otherwise ignore this message.
+        s_text = '''سلام {username} برای تایید حساب خود روی لینک زیر کلیک کنید در غیر این صورت این ایمیل را نادیده بگیرید.
         {link}
         '''.format(username=username, link=s_link)
         
@@ -57,13 +57,12 @@ class Email:
             server.quit()
             
             return s_link_key
-
-        
+  
     
 
     @staticmethod
     def check_confirm_email():
-        s_link = request.get_json()['confirm_link']
+        s_link = request.args.get('link','')
         is_exist = db.db.getUserConfirmLink(s_link)
         
         if is_exist is not None :

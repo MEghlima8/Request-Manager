@@ -1,7 +1,6 @@
 from App.Controller import db_postgres_controller as db
 import jwt
 import datetime
-from flask import abort
 from App import config
 
 class Token :
@@ -18,7 +17,7 @@ class Token :
         # Get the current datetime
         current_datetime = datetime.datetime.utcnow()
         # Add 2 days to the current datetime
-        expiration_datetime = current_datetime + datetime.timedelta(days=2)
+        expiration_datetime = current_datetime + datetime.timedelta(minutes=10)
         # Calculate the corresponding Unix timestamp
         unix_timestamp = int(expiration_datetime.timestamp())
            
@@ -44,7 +43,7 @@ class Token :
         decode_res = self.decode_token()
         
         if decode_res == 'WrongToken':
-            return 'Token is wrong!'
+            return 'WrongToken'
         exp_time = decode_res['expiration_time']
         username = decode_res['username']
         
@@ -54,8 +53,6 @@ class Token :
         
         get_id = db.db.getUserId(username)
         return str(get_id[0])
-        
-        
         
         
     def decode_token(self):

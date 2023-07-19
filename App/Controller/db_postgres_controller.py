@@ -41,11 +41,12 @@ class PostgreSQL:
     
     # Add request to database
     def addReqToDb(self , user_id, type, j_params, time, agent, method, ip):
-        query = "INSERT INTO request (user_id,type,params,time,agent,method,ip) VALUES (%s , %s , %s , %s , %s , %s , %s) RETURNING id"
+        query = "INSERT INTO request (user_id,type,params,time,agent,method,ip,status) VALUES (%s , %s , %s , %s , %s , %s , %s ,'in queue') RETURNING id"
         args =(user_id, type, j_params, time, agent, method, ip)
         req_id = self.execute_query(query, args).fetchall()[0][0]
         return req_id
         
+    
     # Retrieve user id
     def getUserId(self, username):
         query = "select id from users where username=%s"
@@ -81,6 +82,14 @@ class PostgreSQL:
         res = self.execute_query(query,args)
         return res
     
+    
+    def updateStatusInRequest(self, req_id,status):
+        query = "UPDATE request set status=%s WHERE id=%s"
+        args = (status, req_id)
+        res = self.execute_query(query,args)        
+        return res        
+    
+    
     # Retrieve request info
     def getReqInfo(self, req_id):
         query = "SELECT * FROM request WHERE id=%s"
@@ -97,7 +106,7 @@ class PostgreSQL:
     
     # Retrieve process result
     def getReqProcessRes(self, user_id, s_req_id):
-        query = "SELECT result,status FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND process.req_id=%s"
+        query = "SELECT result,process.status FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND process.req_id=%s"
         args = (user_id, s_req_id,)
         res = self.execute_query(query,args).fetchall()
         return res
@@ -144,10 +153,41 @@ class PostgreSQL:
         query = "SELECT result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.type=%s"
         args = (user_id,'/hide-text')
         res = self.execute_query(query,args).fetchall()
-
         return res
 
-        
+
+    def getUserRequestsStatus(self,user_id):
+        query = "SELECT status, COUNT(*) AS count FROM request WHERE user_id=%s GROUP BY status;"
+        args = (user_id,)
+        res = self.execute_query(query,args).fetchall()
+        return res
+
+    def getAllReq(self, user_id, type1, type2=None):
+        query = "SELECT status, COUNT(*) AS count FROM request WHERE user_id=%s AND (type=%s OR type=%s) GROUP BY status;"
+        args = (user_id, type1, type2)
+        res = self.execute_query(query,args).fetchall()
+        return res
+            
+# result  
+    def resDone(self, user_id, type):
+        query = "SELECT request.id,request.status,request.params,process.result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.status='done' AND request.type=%s"
+        args = (user_id, type)
+        res = self.execute_query(query,args).fetchall()
+        return res
+
+    def resProcessing(self, user_id,type):
+        query = "SELECT request.id,request.status,request.params,process.result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.status='processing' AND request.type=%s"
+        args = (user_id, type)
+        res = self.execute_query(query,args).fetchall()
+        return res
+    
+    def resQueue(self, user_id, type):
+        query = "SELECT id,status,params FROM request WHERE user_id=%s AND request.status='in queue' AND request.type=%s"
+        args = (user_id, type)
+        res = self.execute_query(query,args).fetchall()
+        return res
+# End result  
+
 
 db = PostgreSQL(host=host, database=database, user=user, password=password, port=port)
 db.connect()
