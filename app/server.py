@@ -13,7 +13,7 @@ import threading
 import uuid
 import os
 from pydub import AudioSegment
-
+import time
 
 app = Flask(__name__)
 
@@ -500,6 +500,7 @@ def add_to_db(user_id):
 
 
 if __name__ == '__main__':
+    time.sleep(10)
     t = threading.Thread(None, get_request.get_requests_from_queue, None, ())
     t.start()
     app.run(host=config.configs['HOST'], port=config.configs['PORT'] , debug=config.configs['DEBUG'])
