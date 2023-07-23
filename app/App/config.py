@@ -4,6 +4,10 @@ load_dotenv()
 
 configs = {
     
+    'SYSTEM_NAME' : os.getenv('SYSTEM_NAME') , 
+    'DOMAIN_ADDRESS' : os.getenv('DOMAIN_ADDRESS') ,
+    'REQUEST_PROTOCOL' : os.getenv('REQUEST_PROTOCOL') , 
+    
     'HOST' : os.getenv('HOST') , 
     'PORT' : os.getenv('PORT') , 
     'DEBUG' : os.getenv('DEBUG') , 
@@ -25,6 +29,7 @@ configs = {
     'SMTP_PORT' : os.getenv('SMTP_PORT') ,
     'SENDER_EMAIL' : os.getenv('SENDER_EMAIL') ,
     'SMTP_PASSWORD': os.getenv('SMTP_PASSWORD') ,
+    'EMAIL_SUBJECT' : os.getenv('EMAIL_SUBJECT') ,
     
     # Images
     'UPLOAD_IMAGE_BEFORE_HIDE' : os.getenv('UPLOAD_IMAGE_BEFORE_HIDE') ,
@@ -35,5 +40,5 @@ configs = {
     'UPLOAD_SOUND_AFTER_HIDE' : os.getenv('UPLOAD_SOUND_AFTER_HIDE') ,
     
     # Docker Compose
-    'RABBITMQ_SERVICE_NAME': os.getenv('RABBITMQ_SERVICE_NAME')
+    'RABBITMQ_SERVICE_NAME': os.getenv('RABBITMQ_SERVICE_NAME') , 
 }

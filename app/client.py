@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser()
 
 def add_argument_parser():
     arguments = [
-        ['--route', 'route -> ex: /add'],
+        ['--route', 'route -> ex: /add-two-numbers'],
         ['--num1', 'first number'],
         ['--num2', 'second number'],
         ['--reqid', 'your request id'],
@@ -43,11 +43,11 @@ def send_multiple_requests(data, size, route, host, port, headers=None):
 
 
 # add
-def add_route(req_size,host,port):
+def add_two_numbers_route(req_size,host,port):
     args = parser.parse_args()
     data = {"params":{"num1": int(args.num1), "num2": int(args.num2)}} 
     headers = {'Authorization': args.token}
-    send_multiple_requests(data, req_size, 'add', host, port, headers)
+    send_multiple_requests(data, req_size, 'add-two-numbers', host, port, headers)
     
         
 # get result    
@@ -80,14 +80,14 @@ def hide_text(req_size, host, port):
     args = parser.parse_args()
     data = {"params":{"url": args.url, "path":args.path , "text": args.text}} 
     headers = {'Authorization': args.token}
-    send_multiple_requests(data, req_size, 'hide-text', host, port, headers)    
+    send_multiple_requests(data, req_size, 'hide-text-in-image', host, port, headers)    
 
 # get text
 def get_text(req_size, host, port):
     args = parser.parse_args()
     data = {"params":{"url": args.url , "path":args.path}} 
     headers = {'Authorization': args.token}
-    send_multiple_requests(data, req_size, 'get-text', host, port, headers)    
+    send_multiple_requests(data, req_size, 'get-hidden-text-from-image', host, port, headers)    
     
 # hide text message in sound
 def hide_in_sound(req_size, host, port):
@@ -131,8 +131,8 @@ def main():
     if req_size is None or req_size < 1 :
         req_size = 1
     
-    if route == 'add' :
-        add_route(req_size, host,port)
+    if route == 'add-two-numbers' :
+        add_two_numbers_route(req_size, host,port)
         
     elif route == 'get-result' :
         get_result_route(req_size, host, port)
@@ -146,10 +146,10 @@ def main():
     elif route == 'signup':
         signup_route(req_size, host, port)
         
-    elif route == 'hide-text':
+    elif route == 'hide-text-in-image':
         hide_text(req_size, host, port)
     
-    elif route == 'get-text':
+    elif route == 'get-hidden-text-from-image':
         get_text(req_size, host, port)
         
     elif route == 'get-size':

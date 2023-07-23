@@ -9,6 +9,7 @@ services:
           context: .
           dockerfile: Dockerfile
         image: myapp:v1
+        container_name: myapp
         ports:
           - '80:80'
         networks:

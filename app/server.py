@@ -5,6 +5,7 @@ from App.Controller.user_controller import User
 from App.Controller import get_request
 from App.Controller import send_request
 from App.Controller import process
+from App.Controller import admin
 from App.Controller.jwt import Token
 from App.Controller import db_postgres_controller as db
 from datetime import datetime
@@ -13,6 +14,9 @@ import threading
 import uuid
 import os
 from pydub import AudioSegment
+from io import BytesIO
+import requests
+from PIL import Image
 import time
 
 app = Flask(__name__)
@@ -36,56 +40,60 @@ def check_token():
     try:    
         # Check Token is valid
         user_id = int(result)      
-        res = {"status":"accepted" , "result":{"user_id":user_id} , "status-code":200}
+        res = {"result":{"user_id":user_id} , "status-code":200}
     except:
         # Token is invalid.
-        res = {"status":"not accepted" , "result":result , "status-code":401}
+        res = {"result":result , "status-code":401}
     return res    
 
 
 def check_token_and_add_req_to_db():
-    # Get Token  
-    access_token = request.cookies.get('access_token')    
+    # Get Token
+    try:
+        access_token = request.headers.get('Authorization').split()[1]
+    except:
+        access_token = request.headers.get('Authorization')
+        if access_token is None:
+            access_token = request.cookies.get('access_token')
     # Get id
     result = Token(token=access_token).handle_token()    
     try:    
         # Check Token is valid
-        user_id = int(result)              
-        s_req_id = add_to_db(user_id)        
-        res = {"status":"accepted" , "result":{"request_id":s_req_id, "user_id":user_id} , "status-code":200}        
+        user_id = int(result)
+        s_req_id = add_to_db(user_id)
+        res = {"result":{"request_id":s_req_id, "user_id":user_id} , "status-code":200}        
     except:
         # Token is invalid.
-        res = {"status":"not accepted" , "result":result , "status-code":401}        
+        res = {"result":result , "status-code":401}        
     return res    
 
 
-# Signin user
-@app.route('/signin' ,methods=['POST'])
-def signin():
-    
-    j_body_data = request.get_json()
-    s_username = j_body_data['username']
-    s_password = j_body_data['password']
-    o_user = User(username = s_username , password = s_password)
-    o_user = o_user.signin()
-    
-    if o_user == 'True':        
-        session['username'] = s_username
-        session['logged_in'] = True
-                
-        # Set cookie : access token 
-        o_token = Token(username=s_username)
-        s_token = o_token.encode_token()
-        res = {"status":"accepted" , "result":{"token":s_token} , "status-code":200}        
-        resp = make_response(res)
-        resp.set_cookie('access_token', s_token,max_age= 60 * 60)            
+# Admin
+@app.route('/admin-res-add-calc', methods = ['POST'])
+def admin_res_add_calc():
+    return admin.res_add_calc()
 
-    elif o_user == 'noactive' :
-        resp = {"status":"not accepted" , "result":'your account is not active' , "status-code":403 ,}        
-    else:
-        resp = {"status":"not accepted" , "result":o_user , "status-code":401}
-        
-    return resp
+@app.route('/admin-res-steg-img', methods = ['POST'])
+def admin_res_steg_img():
+    return admin.res_steg_img()
+
+@app.route('/admin-res-extr-steg-img', methods = ['POST'])
+def admin_res_extr_steg_img():
+    return admin.res_extr_steg_img()
+
+@app.route('/admin-res-steg-audio', methods = ['POST'])
+def admin_res_steg_audio():
+    return admin.res_steg_audio()
+
+@app.route('/admin-res-extr-audio', methods = ['POST'])
+def admin_res_extr_audio():
+    return admin.res_extr_audio()
+
+@app.route('/admin-users-info', methods = ['POST'])
+def admin_users_info():
+    return admin.users_info()
+
+# Admin
 
 
 def get_route_reqs_status(user_id , type):
@@ -101,7 +109,7 @@ def get_route_reqs_status(user_id , type):
 def get_all_add_req():
     res = check_token()
     if res['status-code'] == 200:
-        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/add')
+        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/add-two-numbers')
         res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
         return res
     elif res['result'] == 'ExpiredToken':
@@ -111,7 +119,7 @@ def get_all_add_req():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
             
-            route_reqs_status = get_route_reqs_status(user_id, '/add')
+            route_reqs_status = get_route_reqs_status(user_id, '/add-two-numbers')
             res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}            
             
             resp = make_response(res)
@@ -127,7 +135,7 @@ def get_all_img_res():
     res = check_token()
     
     if res['status-code'] == 200:
-        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/hide-text')
+        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/hide-text-in-image')
         res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
         return res
     
@@ -138,7 +146,7 @@ def get_all_img_res():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            route_reqs_status = get_route_reqs_status(user_id, '/hide-text')
+            route_reqs_status = get_route_reqs_status(user_id, '/hide-text-in-image')
             res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
             resp = make_response(res)
             resp.set_cookie('access_token', s_token,max_age= 60 * 60)
@@ -202,7 +210,7 @@ def res_extr_steg_audio():
 def res_steg_image():
     res = check_token()
     if res['status-code'] == 200:
-        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/get-text')
+        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/get-hidden-text-from-image')
         res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
         return res
     
@@ -213,7 +221,7 @@ def res_steg_image():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            route_reqs_status = get_route_reqs_status(user_id, '/get-text')
+            route_reqs_status = get_route_reqs_status(user_id, '/get-hidden-text-from-image')
             res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
             resp = make_response(res)
             resp.set_cookie('access_token', s_token,max_age= 60 * 60)
@@ -228,9 +236,9 @@ def res_steg_image():
 def res_add_calc():
     res = check_token()
     if res['status-code'] == 200:
-        user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/add', None)
+        user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/add-two-numbers', None)
         try: 
-            dict_result = {"count" : user_reqs_status[0][1]}
+            dict_result = {"count" : user_reqs_status[0][0]}
         except: dict_result = {"count" : 0}
         j_result = json.dumps(dict_result)
         return j_result
@@ -241,7 +249,7 @@ def res_add_calc():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            user_reqs_status = db.db.getAllReq(user_id, '/add', None)
+            user_reqs_status = db.db.getAllReq(user_id, '/add-two-numbers', None)
             resp = make_response(user_reqs_status)
             resp.set_cookie('access_token', s_token,max_age = 60 * 60)
     
@@ -254,9 +262,9 @@ def res_add_calc():
 def get_all_img_steg_req():
     res = check_token()    
     if res['status-code'] == 200:
-        user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/hide-text', '/get-text')
+        user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/hide-text-in-image', '/get-hidden-text-from-image')
         try: 
-            dict_result = {"count" : user_reqs_status[0][1]}
+            dict_result = {"count" : user_reqs_status[0][0]}
         except: dict_result = {"count" : 0}
         j_result = json.dumps(dict_result)
         return j_result
@@ -268,7 +276,7 @@ def get_all_img_steg_req():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            user_reqs_status = db.db.getAllReq(user_id, '/hide-text', '/get-text')
+            user_reqs_status = db.db.getAllReq(user_id, '/hide-text-in-image', '/get-hidden-text-from-image')
             resp = make_response(user_reqs_status)
             resp.set_cookie('access_token', s_token,max_age= 60 * 60)
     
@@ -283,7 +291,7 @@ def get_all_audio_steg_req():
     if res['status-code'] == 200:
         user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/hide-in-sound', '/get-from-sound')
         try: 
-            dict_result = {"count" : user_reqs_status[0][1]}
+            dict_result = {"count" : user_reqs_status[0][0]}
         except: dict_result = {"count" : 0}
         j_result = json.dumps(dict_result)
         return j_result
@@ -335,42 +343,77 @@ def get_user_requests_status():
     
 
 # Signup user
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['POST'])
 def signup():
-    if request.method == 'GET':
-        return render_template('/pages/sign-up.html')
-    
     # Retrieve data from the body and header
     body_data = request.get_json()
     # header_data = request.headers
     
     o_user = User(body_data['username'] , body_data['email'] , body_data['password'])
-    j_user = o_user.signup()
+    user = o_user.signup()
     
-    if j_user["status"] == "True":
-        res = {"status":"success" , "result":"done" , "status-code":201 , "confirm_link":j_user["result"] }
+    if user["status"] == "True":
+        res = {"result":{"confirm_link":user} , "status-code":201 }
     else:
-        res = {"status":"not accepted" , "result":j_user["result"] , "status-code":400}
+        res = {"result":user["result"] , "status-code":400}
     return res
 
 
 # To accept the link confirmation request
-@app.route('/confirm', methods=['GET'])
+@app.route('/confirm', methods=['GET','POST'])
 def _check_confirm():
     res = Email.check_confirm_email()
-    if res == 'True':
-        res = 'حساب کاربری شما با موفقیت تایید شد. اکنون میتوانید وارد حساب خود شوید.'
-    else :
-        res = 'لینک تایید معتبر نمی باشد.'
-    return res
+    if res['status'] == 'True':
+        if res['api_req'] :
+            result = {"result":"Email confirmed successfully", "status-code":200}
+            return result
+        return render_template('confirm_email.html')
+    
+    if res['api_req'] :
+        result = {"result":"Confirmation email is not valid", "status-code":404}
+        return result
+    abort(404)
+    
+
+
+# Signin user
+@app.route('/signin' ,methods=['POST'])
+def signin():
+    
+    j_body_data = request.get_json()
+    s_username = j_body_data['username']
+    s_password = j_body_data['password']
+    if s_username == 'admin' and s_password == 'admin':
+        session['admin'] = True
+        return admin.get_dashboard_info()
+    o_user = User(username = s_username , password = s_password)
+    o_user = o_user.signin()
+    
+    if o_user == 'True':        
+        session['username'] = s_username
+        session['logged_in'] = True
+                
+        # Set cookie : access token 
+        o_token = Token(username=s_username)
+        s_token = o_token.encode_token()
+        res = {"result":{"token":s_token} , "status-code":200}        
+        resp = make_response(res)
+        resp.set_cookie('access_token', s_token,max_age= 60 * 60)            
+
+    elif o_user == 'noactive' :
+        resp = {"result":'your account is not active' , "status-code":403}        
+    elif o_user == 'invalid':
+        resp = {"result":o_user , "status-code":400}
+    return resp
 
 
 
 
-@app.route('/add', methods=['POST'])
+
+@app.route('/add-two-numbers', methods=['POST'])
 def add():    
     res = check_token_and_add_req_to_db()
-    if res["status"] == "accepted":
+    if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
         res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res
@@ -379,25 +422,25 @@ def add():
 @app.route('/get-size', methods=['POST'])
 def get_size():    
     res = check_token_and_add_req_to_db()
-    if res["status"] == "accepted":
+    if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
         res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
-    return res    
+    return res
 
 
-@app.route('/hide-text', methods=['POST'])
+@app.route('/hide-text-in-image', methods=['POST'])
 def hide_text():
     res = check_token_and_add_req_to_db()
-    if res["status"] == "accepted":
+    if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
         res = process.result(res["result"]["request_id"] , res["result"]["user_id"])    
     return res
 
 
-@app.route('/get-text', methods=['POST'])
+@app.route('/get-hidden-text-from-image', methods=['POST'])
 def get_text():    
     res = check_token_and_add_req_to_db()
-    if res["status"] == "accepted":
+    if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
         res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res
@@ -423,14 +466,14 @@ def get_result():
         return res
     except:
         # Token is invalid.        
-        res = {"status":"not accepted" , "result":result , "status-code":401}   
+        res = {"result":result , "status-code":401}   
         return res   
 
 
 @app.route('/hide-in-sound' , methods=['POST'])
 def hide_in_sound():
     res = check_token_and_add_req_to_db()
-    if res["status"] == "accepted":
+    if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
         res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res
@@ -439,7 +482,7 @@ def hide_in_sound():
 @app.route('/get-from-sound' , methods=['POST'])
 def get_from_sound():
     res = check_token_and_add_req_to_db()
-    if res["status"] == "accepted":
+    if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
         res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
     return res
@@ -447,18 +490,36 @@ def get_from_sound():
 
 def add_to_db(user_id):    
     type = request.path # ex: /add
-    if type == '/hide-text':   
+    if type == '/hide-text-in-image':   
         # Save image        
-        img_steg_new_req_img = request.files['img_steg_new_req_img']         
+        try:
+            img_steg_new_req_img = request.files['img_steg_new_req_img']         
+            msg_steg_newreq_img = request.form['msg_steg_newreq_img']        
+        except:
+            info = request.get_json()
+            msg_steg_newreq_img = info["params"]["text"]
+            # Get image from URL
+            image_url = info["params"]["url"]
+            response = requests.get(image_url)
+            img_steg_new_req_img = Image.open(BytesIO(response.content))
+            response.raise_for_status()
+
         name_uuid = uuid.uuid4().hex
         img_src = name_uuid + '.png'
         img_steg_new_req_img.save(os.path.join(config.configs["UPLOAD_IMAGE_BEFORE_HIDE"], img_src))        
-        msg_steg_newreq_img = request.form['msg_steg_newreq_img']        
         params = {"url" : config.configs["UPLOAD_IMAGE_BEFORE_HIDE"] + img_src , 
                   "text" : msg_steg_newreq_img}
         
-    elif type == '/get-text':
-        extr_steg_img = request.files['extr_steg_img']
+    elif type == '/get-hidden-text-from-image':
+        try:
+            image_url = request.get_json()["url"]
+            response = requests.get(image_url)
+            extr_steg_img = Image.open(BytesIO(response.content))
+            response.raise_for_status()
+
+        except:
+            extr_steg_img = request.files['extr_steg_img']
+
         name_uuid = uuid.uuid4().hex
         img_src = name_uuid + '.png'        
         extr_steg_img.save(os.path.join(config.configs["UPLOAD_IMAGE_BEFORE_HIDE"], img_src))        
@@ -494,8 +555,8 @@ def add_to_db(user_id):
     agent = request.headers['User-Agent']
     method = request.method
     ip =  request.remote_addr
-    time = str(datetime.now())    
-    req_id = db.db.addReqToDb(user_id, type, j_params, time, agent, method, ip)     
+    time = str(datetime.now()) 
+    req_id = db.db.addReqToDb(user_id, type, j_params, time, agent, method, ip) 
     return str(req_id)
 
 

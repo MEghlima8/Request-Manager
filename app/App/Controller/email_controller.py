@@ -17,6 +17,7 @@ class Email:
         self.i_port = int(config.configs['SMTP_PORT'])
         self.s_sender_email = config.configs['SENDER_EMAIL']
         self.s_password = config.configs['SMTP_PASSWORD']
+        self.email_subject = config.configs['EMAIL_SUBJECT']
 
     def send_confirmation_email(self, email, username):
 
@@ -30,19 +31,21 @@ class Email:
         
         
     def send_confirmation_link_multiThread(self, email, username, s_link_key ):
-        host = config.configs['HOST']
+        domain_address = config.configs['DOMAIN_ADDRESS']
         port = config.configs['PORT']
+        request_protocol = config.configs['REQUEST_PROTOCOL']
+        system_name = config.configs['SYSTEM_NAME']
         # The link to which the confirmation request will be emailed
-        s_link = 'http://%s:%s/confirm?link=%s' % (host,port,s_link_key)
+        s_link = '%s://%s:%s/confirm?link=%s' % (request_protocol, domain_address, port, s_link_key)
         
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "Confirmation Link"
+        msg['Subject'] = self.email_subject
         msg['From'] = self.s_sender_email
         msg['To'] = email
         
-        s_text = '''سلام {username} برای تایید حساب خود روی لینک زیر کلیک کنید در غیر این صورت این ایمیل را نادیده بگیرید.
+        s_text = '''سلام {username} برای تایید حساب خود در سامانه {system_name} روی لینک زیر کلیک کنید در غیر این صورت این ایمیل را نادیده بگیرید.
         {link}
-        '''.format(username=username, link=s_link)
+        '''.format(username=username, system_name=system_name ,link=s_link)
         
         s_text_mime = MIMEText(s_text, 'plain','utf-8')
         
@@ -62,15 +65,22 @@ class Email:
 
     @staticmethod
     def check_confirm_email():
-        s_link = request.args.get('link','')
+        api_req = False
+        try:
+            body_data = request.get_json()
+            s_link = body_data['confirm_link']
+            api_req = True
+        except:
+            s_link = request.args.get('link')
         is_exist = db.db.getUserConfirmLink(s_link)
         
         if is_exist is not None :
             db.db.activeUser(s_link)
-            return 'True'
-        
-        # Confirm link in wrong
-        return 'False'
+            res = {"status":'True', 'api_req': api_req}
+            return res
+        res = {"status":'False', 'api_req': api_req}
+        # Confirm link is wrong
+        return res
     
 
     @staticmethod

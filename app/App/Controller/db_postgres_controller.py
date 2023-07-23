@@ -151,7 +151,7 @@ class PostgreSQL:
         user_id = self.execute_query(query,args).fetchall()[0][0]
 
         query = "SELECT result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.type=%s"
-        args = (user_id,'/hide-text')
+        args = (user_id,'/hide-text-in-image')
         res = self.execute_query(query,args).fetchall()
         return res
 
@@ -163,7 +163,7 @@ class PostgreSQL:
         return res
 
     def getAllReq(self, user_id, type1, type2=None):
-        query = "SELECT status, COUNT(*) AS count FROM request WHERE user_id=%s AND (type=%s OR type=%s) GROUP BY status;"
+        query = "SELECT COUNT(*) AS count FROM request WHERE user_id=%s AND (type=%s OR type=%s);"
         args = (user_id, type1, type2)
         res = self.execute_query(query,args).fetchall()
         return res
@@ -188,6 +188,56 @@ class PostgreSQL:
         return res
 # End result  
 
+
+# Admin
+
+    def admin_getUsersRequestsStatus(self):
+        query = "SELECT status, COUNT(*) AS count FROM request GROUP BY status;"
+        args = ()
+        res = self.execute_query(query,args).fetchall()
+        return res
+
+    def admin_getAllReq(self, type1, type2):
+        query = "SELECT COUNT(*) AS count FROM request WHERE type=%s OR type=%s ;"
+        args = (type1, type2)
+        res = self.execute_query(query,args).fetchall()
+        return res
+
+
+    # Result
+    
+
+    def admin_resDone(self, type):
+        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip FROM request INNER JOIN process ON request.id=process.req_id WHERE request.status='done' AND request.type=%s"
+        args = (type,)
+        res = self.execute_query(query,args).fetchall()
+        return res
+
+    def admin_resProcessing(self, type):
+        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip FROM request INNER JOIN process ON request.id=process.req_id WHERE  request.status='processing' AND request.type=%s"
+        args = (type,)
+        res = self.execute_query(query,args).fetchall()
+        return res
+    
+    def admin_resQueue(self, type):
+        query = "SELECT user_id, id, status, params, ip FROM request WHERE request.status='in queue' AND request.type=%s"
+        args = (type,)
+        res = self.execute_query(query,args).fetchall()
+        return res
+    
+    # End result
+
+    # Users info
+    def admin_get_users_info(self):
+        query = "SELECT id, username, email, active FROM users"
+        args = ()
+        res = self.execute_query(query,args).fetchall()
+        return res
+    # End users info
+
+
+
+# End admin
 
 db = PostgreSQL(host=host, database=database, user=user, password=password, port=port)
 db.connect()
