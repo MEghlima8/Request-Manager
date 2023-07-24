@@ -94,7 +94,7 @@ def hide_in_sound(req_size, host, port):
     args = parser.parse_args()
     data = {"params":{"url": args.url , "path":args.path , "text": args.text}} 
     headers = {'Authorization': args.token}
-    send_multiple_requests(data, req_size, 'hide-in-sound', host, port, headers)    
+    send_multiple_requests(data, req_size, 'hide-text-in-sound', host, port, headers)    
 
 
 # get text message from sound
@@ -102,7 +102,7 @@ def get_from_sound(req_size, host, port):
     args = parser.parse_args()
     data = {"params":{"url": args.url , "path":args.path}} 
     headers = {'Authorization': args.token}
-    send_multiple_requests(data, req_size, 'get-from-sound', host, port, headers)    
+    send_multiple_requests(data, req_size, 'get-hidden-text-from-sound', host, port, headers)    
     
     
 # get size
@@ -155,10 +155,10 @@ def main():
     elif route == 'get-size':
         get_size(req_size, host, port)
         
-    elif route == 'hide-in-sound':
+    elif route == 'hide-text-in-sound':
         hide_in_sound(req_size, host, port)
         
-    elif route == 'get-from-sound':
+    elif route == 'get-hidden-text-from-sound':
         get_from_sound(req_size, host, port)
         
     else:

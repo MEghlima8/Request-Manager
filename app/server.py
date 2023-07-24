@@ -56,7 +56,7 @@ def check_token_and_add_req_to_db():
         if access_token is None:
             access_token = request.cookies.get('access_token')
     # Get id
-    result = Token(token=access_token).handle_token()    
+    result = Token(token=access_token).handle_token() 
     try:    
         # Check Token is valid
         user_id = int(result)
@@ -162,7 +162,7 @@ def get_all_img_res():
 def res_steg_audio():
     res = check_token()
     if res['status-code'] == 200:
-        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/hide-in-sound')
+        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/hide-text-in-sound')
         res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
         return res
     
@@ -173,7 +173,7 @@ def res_steg_audio():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            route_reqs_status = get_route_reqs_status(user_id, '/hide-in-sound')
+            route_reqs_status = get_route_reqs_status(user_id, '/hide-text-in-sound')
             res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
             resp = make_response(res)
             resp.set_cookie('access_token', s_token,max_age= 60 * 60)
@@ -186,7 +186,7 @@ def res_steg_audio():
 def res_extr_steg_audio():
     res = check_token()
     if res['status-code'] == 200:
-        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/get-from-sound')
+        route_reqs_status = get_route_reqs_status(res["result"]["user_id"], '/get-hidden-text-from-sound')
         res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
         return res
     
@@ -197,7 +197,7 @@ def res_extr_steg_audio():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            route_reqs_status = get_route_reqs_status(user_id, '/get-from-sound')
+            route_reqs_status = get_route_reqs_status(user_id, '/get-hidden-text-from-sound')
             res = {'queue':route_reqs_status['queue'] , 'processing':route_reqs_status['processing'], 'done': route_reqs_status['done']}
             resp = make_response(res)
             resp.set_cookie('access_token', s_token,max_age= 60 * 60)
@@ -289,7 +289,7 @@ def get_all_img_steg_req():
 def get_all_audio_steg_req():
     res = check_token()    
     if res['status-code'] == 200:
-        user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/hide-in-sound', '/get-from-sound')
+        user_reqs_status = db.db.getAllReq(res["result"]["user_id"], '/hide-text-in-sound', '/get-hidden-text-from-sound')
         try: 
             dict_result = {"count" : user_reqs_status[0][0]}
         except: dict_result = {"count" : 0}
@@ -303,7 +303,7 @@ def get_all_audio_steg_req():
             s_token = o_token.encode_token()
             user_id = db.db.getUserId(session['username'])
     
-            user_reqs_status = db.db.getAllReq(user_id, '/hide-in-sound', '/get-from-sound')
+            user_reqs_status = db.db.getAllReq(user_id, '/hide-text-in-sound', '/get-hidden-text-from-sound')
             resp = make_response(user_reqs_status)
             resp.set_cookie('access_token', s_token,max_age= 60 * 60)
     
@@ -342,6 +342,19 @@ def get_user_requests_status():
     abort (401)
     
 
+@app.route('/get-size', methods=['POST'])
+def get_size():    
+    res = check_token_and_add_req_to_db()
+    if res["status-code"] == 200:
+        send_request.send(res["result"]["request_id"])        # Send request to queue
+        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
+    return res
+
+
+
+# API
+
+
 # Signup user
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -376,6 +389,7 @@ def _check_confirm():
     
 
 
+
 # Signin user
 @app.route('/signin' ,methods=['POST'])
 def signin():
@@ -407,20 +421,8 @@ def signin():
     return resp
 
 
-
-
-
 @app.route('/add-two-numbers', methods=['POST'])
 def add():    
-    res = check_token_and_add_req_to_db()
-    if res["status-code"] == 200:
-        send_request.send(res["result"]["request_id"])        # Send request to queue
-        res = process.result(res["result"]["request_id"] , res["result"]["user_id"])
-    return res
-
-
-@app.route('/get-size', methods=['POST'])
-def get_size():    
     res = check_token_and_add_req_to_db()
     if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
@@ -437,8 +439,9 @@ def hide_text():
     return res
 
 
+
 @app.route('/get-hidden-text-from-image', methods=['POST'])
-def get_text():    
+def get_text():
     res = check_token_and_add_req_to_db()
     if res["status-code"] == 200:
         send_request.send(res["result"]["request_id"])        # Send request to queue
@@ -469,8 +472,11 @@ def get_result():
         res = {"result":result , "status-code":401}   
         return res   
 
+# End API
 
-@app.route('/hide-in-sound' , methods=['POST'])
+
+
+@app.route('/hide-text-in-sound' , methods=['POST'])
 def hide_in_sound():
     res = check_token_and_add_req_to_db()
     if res["status-code"] == 200:
@@ -479,7 +485,7 @@ def hide_in_sound():
     return res
 
 
-@app.route('/get-from-sound' , methods=['POST'])
+@app.route('/get-hidden-text-from-sound' , methods=['POST'])
 def get_from_sound():
     res = check_token_and_add_req_to_db()
     if res["status-code"] == 200:
@@ -494,7 +500,7 @@ def add_to_db(user_id):
         # Save image        
         try:
             img_steg_new_req_img = request.files['img_steg_new_req_img']         
-            msg_steg_newreq_img = request.form['msg_steg_newreq_img']        
+            msg_steg_newreq_img = request.form['msg_steg_newreq_img']       
         except:
             info = request.get_json()
             msg_steg_newreq_img = info["params"]["text"]
@@ -512,11 +518,10 @@ def add_to_db(user_id):
         
     elif type == '/get-hidden-text-from-image':
         try:
-            image_url = request.get_json()["url"]
+            image_url = request.get_json()["params"]["url"]
             response = requests.get(image_url)
             extr_steg_img = Image.open(BytesIO(response.content))
             response.raise_for_status()
-
         except:
             extr_steg_img = request.files['extr_steg_img']
 
@@ -525,21 +530,36 @@ def add_to_db(user_id):
         extr_steg_img.save(os.path.join(config.configs["UPLOAD_IMAGE_BEFORE_HIDE"], img_src))        
         params = {"url" : config.configs["UPLOAD_IMAGE_BEFORE_HIDE"] + img_src }
         
-    elif type == '/hide-in-sound':
-        msg_newreq_audio = request.form['msg_newreq_audio']        
-        # Save Audio        
-        audio_newreq_audio = request.files['audio_newreq_audio'] 
-        
-        wav_output_path = config.configs["UPLOAD_SOUND_BEFORE_HIDE"] + uuid.uuid4().hex + '.wav'
+    elif type == '/hide-text-in-sound':
+        try:
+            msg_newreq_audio = request.form['msg_newreq_audio']
+            audio_newreq_audio = request.files['audio_newreq_audio'] 
+        except:
+            msg_newreq_audio = request.get_json()["params"]["text"]
+            url = request.get_json()["params"]["url"]
+            response = requests.get(url)
+            
+            audio_newreq_audio = config.configs["UPLOAD_SOUND_BEFORE_HIDE"] + uuid.uuid4().hex + '.wav'
+            with open(audio_newreq_audio, 'wb') as file:
+                file.write(response.content)
+
         audio = AudioSegment.from_file(audio_newreq_audio)
-        audio.export(wav_output_path , format='wav')
         
+        # Save Audio        
+        wav_output_path = config.configs["UPLOAD_SOUND_BEFORE_HIDE"] + uuid.uuid4().hex + '.wav'
+        audio.export(wav_output_path , format='wav')
+
         params = {"url" : wav_output_path , 
                   "text" : msg_newreq_audio}
     
-    elif type == '/get-from-sound':
-        extr_steg_audio = request.files['extr_steg_audio'] 
-        
+    elif type == '/get-hidden-text-from-sound':
+        try:
+            extr_steg_audio = request.files['extr_steg_audio'] 
+        except:
+            url = request.get_json()["params"]["url"]
+            response = requests.get(url)
+            extr_steg_audio = BytesIO(response.content)
+            
         wav_output_path = config.configs["UPLOAD_SOUND_BEFORE_HIDE"] + uuid.uuid4().hex + '.wav'
         audio = AudioSegment.from_file(extr_steg_audio)
         audio.export(wav_output_path , format='wav')
@@ -556,7 +576,7 @@ def add_to_db(user_id):
     method = request.method
     ip =  request.remote_addr
     time = str(datetime.now()) 
-    req_id = db.db.addReqToDb(user_id, type, j_params, time, agent, method, ip) 
+    req_id = db.db.addReqToDb(user_id, type, j_params, time, agent, method, ip)
     return str(req_id)
 
 

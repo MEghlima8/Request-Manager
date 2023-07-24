@@ -55,12 +55,12 @@ def encode(pathToAudio,stringToEncode):
     audioData[0] = chunks.ravel().astype(np.int16)    
 
     # Get uuid to save message as sound
-    sound_uuid = uuid.uuid4().hex
-    output_path = config.configs["UPLOAD_SOUND_AFTER_HIDE"] + sound_uuid + '.wav'
+    sound_uuid = uuid.uuid4().hex + '.wav'
+    output_path = config.configs["UPLOAD_SOUND_AFTER_HIDE"] + sound_uuid
 
     wavfile.write(output_path, rate, audioData.T)
     
-    return output_path
+    return sound_uuid
 
 
 def decode(audioLocation):

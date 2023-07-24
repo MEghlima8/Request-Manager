@@ -218,6 +218,7 @@ app_methods.sendAddCalcReq = function(){
     else {
         axios.post('/add-two-numbers', data).then(response => { 
             Swal.fire({title:'تایید درخواست' ,text:'درخواست شما با موفقیت تایید شد', icon:'success', confirmButtonText:'تایید'})
+            this.resAddCalc();
         })}
 }
 // # Add calc
@@ -262,6 +263,7 @@ app_methods.stegNewReqImg = function(){
             this.progress = 100;
             Swal.fire({title:'تایید درخواست' ,text:'درخواست شما با موفقیت تایید شد', icon:'success', confirmButtonText:'تایید'})
             this.message = 'آپلود با موفقیت انجام شد';
+            this.resStegImg();
           })
         .catch(error => {
             this.message = 'خطا در آپلود تصویر';
@@ -313,6 +315,7 @@ app_methods.extrStegImg = function(){
             this.progress = 100;
             Swal.fire({title:'تایید درخواست' ,text:'درخواست شما با موفقیت تایید شد', icon:'success', confirmButtonText:'تایید'})
             this.message = 'آپلود با موفقیت انجام شد';
+            this.resExtrStegImg();
           })
         .catch(error => {
             this.message = 'خطا در آپلود تصویر';
@@ -340,7 +343,7 @@ app_methods.extrNewReqAudio = function(){
     if (this.extr_steg_audio.type.startsWith('audio/')) {
         const fd = new FormData();
         fd.append('extr_steg_audio',this.extr_steg_audio)
-        axios.post('/get-from-sound', fd, {
+        axios.post('/get-hidden-text-from-sound', fd, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
@@ -353,6 +356,7 @@ app_methods.extrNewReqAudio = function(){
             this.progress = 100;
             Swal.fire({title:'تایید درخواست' ,text:'درخواست شما با موفقیت تایید شد', icon:'success', confirmButtonText:'تایید'})
             this.message = 'آپلود با موفقیت انجام شد';
+            this.resExtrStegAudio();
           })
         .catch(error => {
             this.message = 'خطا در آپلود تصویر';
@@ -398,7 +402,7 @@ app_methods.steg_new_req_audio = function(){
         const fd = new FormData();
         fd.append('msg_newreq_audio',this.msg_newreq_audio)
         fd.append('audio_newreq_audio',this.audio_newreq_audio)
-        axios.post('/hide-in-sound', fd, {
+        axios.post('/hide-text-in-sound', fd, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
@@ -411,6 +415,7 @@ app_methods.steg_new_req_audio = function(){
             this.progress = 100;
             Swal.fire({title:'تایید درخواست' ,text:'درخواست شما با موفقیت تایید شد', icon:'success', confirmButtonText:'تایید'})
             this.message = 'آپلود با موفقیت انجام شد';
+            this.resStegAudio();
           })
         .catch(error => {
             this.message = 'خطا در آپلود تصویر';

@@ -10,7 +10,7 @@ def get_dashboard_info():
     
     dict_result["result"]["all_add_reqs"] = db.db.admin_getAllReq('/add-two-numbers', None)[0][0]
     dict_result["result"]["all_img_steg_reqs"] = db.db.admin_getAllReq('/hide-text-in-image', '/get-hidden-text-from-image')[0][0]
-    dict_result["result"]["all_audio_steg_reqs"] = db.db.admin_getAllReq('/hide-in-sound', '/get-from-sound')[0][0]
+    dict_result["result"]["all_audio_steg_reqs"] = db.db.admin_getAllReq('/hide-text-in-sound', '/get-hidden-text-from-sound')[0][0]
 
     j_result = json.dumps(dict_result) 
     return j_result
@@ -43,13 +43,13 @@ def res_extr_steg_img():
     return j_result
  
 def res_steg_audio():
-    users_steg_audio_req_status = get_route_reqs_status('/hide-in-sound')
+    users_steg_audio_req_status = get_route_reqs_status('/hide-text-in-sound')
     result = {"status-code":200 , "result":users_steg_audio_req_status}
     j_result = json.dumps(result)
     return j_result
 
 def res_extr_audio():
-    users_extr_steg_audio_req_status = get_route_reqs_status('/get-from-sound')
+    users_extr_steg_audio_req_status = get_route_reqs_status('/get-hidden-text-from-sound')
     result = {"status-code":200 , "result":users_extr_steg_audio_req_status}
     j_result = json.dumps(result)
     return j_result

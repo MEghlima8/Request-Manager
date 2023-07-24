@@ -30,9 +30,9 @@ def process(req_id):
         result = get_text(req_info[0])
     elif route == '/get-size':
         result = get_size(req_info[0])
-    elif route == '/hide-in-sound':
+    elif route == '/hide-text-in-sound':
         result = hide_in_sound(req_info[0])
-    elif route == '/get-from-sound':
+    elif route == '/get-hidden-text-from-sound':
         result = get_from_sound(req_info[0])
     
     # end time
@@ -98,10 +98,11 @@ def hide_text(info):
 def hide_in_sound(info):     
     text_to_hide = info[3]["text"]    
     audio_path = info[3]["url"]
-        
-    sound_output_path = soundstegano.encode(audio_path, text_to_hide)
+    sound_name = soundstegano.encode(audio_path, text_to_hide)
 
-    res = {"result":{"url":sound_output_path}}
+    req_protocol = config.configs['REQUEST_PROTOCOL']
+    dom_address = config.configs['DOMAIN_ADDRESS']
+    res = {"result":{"url":f'{req_protocol}://{dom_address}/static/sounds/afterHide/{sound_name}'}}    
     res = json.dumps(res)
     return res
 
