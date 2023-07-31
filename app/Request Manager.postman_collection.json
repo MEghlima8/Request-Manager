@@ -1,0 +1,307 @@
+{
+	"info": {
+		"_postman_id": "b9217ab3-73d0-4b94-913e-24bc62f7fb51",
+		"name": "Request Manager",
+		"description": "This is just for test to learn how is work Postman?",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28290872"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"m_eghlima8\",\n    \"password\": \"Abcdefgh@1\",\n    \"email\": \"fjkldadhfkhkhea@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:80/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"confirm_link\": \"h2dR2Wpd9kTF72beEwhA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:80/confirm",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"confirm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"m_eghlima8\",\n    \"password\": \"Abcdefgh@1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/signin",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add two numbers",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1fZWdobGltYTgiLCJleHBpcmF0aW9uX3RpbWUiOjE2ODk1MDM4MjN9.apLBBcrZ_eAt8RImi76nlHJrvntnt4GGPwXhstSjy28",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"params\": {\n        \"num1\": 250,\n        \"num2\": 11\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/add",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get request result",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1fZWdobGltYTgiLCJleHBpcmF0aW9uX3RpbWUiOjE2OTAyMDQ2OTl9.RBr3t5COKgX1JvQN9v31Whp0FG2OwEqelPsfCksYZ_c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"request_id\": \"1126\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/get-result",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"get-result"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hide text in image",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1fZWdobGltYTgiLCJleHBpcmF0aW9uX3RpbWUiOjE2OTAxMTk0MzN9.fs0_JoAp8nklw4Jv7SuMk-K3-GEV7HL6_GKWV6ONWYI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"params\": {\n        \"url\": \"https://blog.finxter.com/wp-content/uploads/2022/04/greenland_02a.jpg\",\n        \"text\": \"image secret3\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/hide-text-in-image",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"hide-text-in-image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get hidden text from image",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1fZWdobGltYTgiLCJleHBpcmF0aW9uX3RpbWUiOjE2ODk1MDM4MjN9.apLBBcrZ_eAt8RImi76nlHJrvntnt4GGPwXhstSjy28",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"params\": {\n        \"url\": \"http://127.0.0.1/static/images/afterHide/127315a8e0a84b1fae905ed015aba256.png\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/get-hidden-text-from-image",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"get-hidden-text-from-image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hide text in sound",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1fZWdobGltYTgiLCJleHBpcmF0aW9uX3RpbWUiOjE2OTAyMDQ2OTl9.RBr3t5COKgX1JvQN9v31Whp0FG2OwEqelPsfCksYZ_c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"params\": {\n        \"url\" : \"https://file-examples.com/storage/fee3d1095964bab199aee29/2017/11/file_example_MP3_700KB.mp3\",\n        \"text\": \"Hellllllll1234\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/hide-text-in-sound",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"hide-text-in-sound"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get hidden text from sound",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1fZWdobGltYTgiLCJleHBpcmF0aW9uX3RpbWUiOjE2OTAyMDQ2OTl9.RBr3t5COKgX1JvQN9v31Whp0FG2OwEqelPsfCksYZ_c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"params\": {\n        \"url\": \"http://0.0.0.0/static/sounds/afterHide/640c0441de514238ae2c54c9bcff10cc.wav\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/get-hidden-text-from-sound",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"get-hidden-text-from-sound"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
