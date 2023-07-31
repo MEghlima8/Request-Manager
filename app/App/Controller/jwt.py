@@ -16,7 +16,7 @@ class Token :
     def encode_token(self):         
         # Get the current datetime
         current_datetime = datetime.datetime.utcnow()
-        # Add 2 days to the current datetime
+        # Add 10 minutes to the current datetime
         expiration_datetime = current_datetime + datetime.timedelta(minutes=10)
         # Calculate the corresponding Unix timestamp
         unix_timestamp = int(expiration_datetime.timestamp())

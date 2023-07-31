@@ -65,20 +65,20 @@ class Email:
 
     @staticmethod
     def check_confirm_email():
-        api_req = False
+        check_link = False
         try:
             body_data = request.get_json()
             s_link = body_data['confirm_link']
-            api_req = True
+            check_link = True
         except:
             s_link = request.args.get('link')
         is_exist = db.db.getUserConfirmLink(s_link)
         
         if is_exist is not None :
             db.db.activeUser(s_link)
-            res = {"status":'True', 'api_req': api_req}
+            res = {"status":'True', 'check_link': check_link}
             return res
-        res = {"status":'False', 'api_req': api_req}
+        res = {"status":'False', 'check_link': check_link}
         # Confirm link is wrong
         return res
     

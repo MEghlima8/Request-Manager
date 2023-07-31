@@ -13,9 +13,7 @@ def main():
     channel.queue_declare(queue='requests')
 
     # Whenever we receive a message, this callback function is called
-    def callback(ch, method, properties, body):
-        print(".................. Received .................. %r" % body.decode())
-        
+    def callback(ch, method, properties, body):        
         proc_res = process(int(body.decode()))
         return proc_res
 

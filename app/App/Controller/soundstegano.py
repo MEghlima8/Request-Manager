@@ -1,3 +1,5 @@
+# Reference : https://medium.com/@achyuta.katta/audio-steganography-using-phase-encoding-d13f100380f2
+
 import uuid
 import numpy as np
 from scipy.io import wavfile

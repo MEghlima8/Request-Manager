@@ -40,9 +40,9 @@ class PostgreSQL:
         return cur
     
     # Add request to database
-    def addReqToDb(self , user_id, type, j_params, time, agent, method, ip):
-        query = "INSERT INTO request (user_id,type,params,time,agent,method,ip,status) VALUES (%s , %s , %s , %s , %s , %s , %s ,'in queue') RETURNING id"
-        args =(user_id, type, j_params, time, agent, method, ip)
+    def addReqToDb(self , user_id, type, j_params, time, agent, method, ip, uuid):
+        query = "INSERT INTO request (user_id,type,params,time,agent,method,ip,status,uuid) VALUES (%s , %s , %s , %s , %s , %s , %s , 'in queue' , %s) RETURNING id"
+        args =(user_id, type, j_params, time, agent, method, ip, uuid)
         req_id = self.execute_query(query, args).fetchall()[0][0]
         return req_id
         
@@ -170,23 +170,24 @@ class PostgreSQL:
             
 # result  
     def resDone(self, user_id, type):
-        query = "SELECT request.id,request.status,request.params,process.result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.status='done' AND request.type=%s"
+        query = "SELECT request.id,request.status,request.params,process.result,request.uuid FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.status='done' AND request.type=%s"
         args = (user_id, type)
         res = self.execute_query(query,args).fetchall()
         return res
 
     def resProcessing(self, user_id,type):
-        query = "SELECT request.id,request.status,request.params,process.result FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.status='processing' AND request.type=%s"
+        query = "SELECT request.id,request.status,request.params,process.result,request.uuid FROM request INNER JOIN process ON request.id=process.req_id WHERE request.user_id=%s AND request.status='processing' AND request.type=%s"
         args = (user_id, type)
         res = self.execute_query(query,args).fetchall()
         return res
     
     def resQueue(self, user_id, type):
-        query = "SELECT id,status,params FROM request WHERE user_id=%s AND request.status='in queue' AND request.type=%s"
+        query = "SELECT id,status,params,request.uuid FROM request WHERE user_id=%s AND request.status='in queue' AND request.type=%s"
         args = (user_id, type)
         res = self.execute_query(query,args).fetchall()
         return res
 # End result  
+
 
 
 # Admin
@@ -205,22 +206,21 @@ class PostgreSQL:
 
 
     # Result
-    
 
     def admin_resDone(self, type):
-        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip FROM request INNER JOIN process ON request.id=process.req_id WHERE request.status='done' AND request.type=%s"
+        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip, request.uuid FROM request INNER JOIN process ON request.id=process.req_id WHERE request.status='done' AND request.type=%s"
         args = (type,)
         res = self.execute_query(query,args).fetchall()
         return res
 
     def admin_resProcessing(self, type):
-        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip FROM request INNER JOIN process ON request.id=process.req_id WHERE  request.status='processing' AND request.type=%s"
+        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip, request.uuid FROM request INNER JOIN process ON request.id=process.req_id WHERE  request.status='processing' AND request.type=%s"
         args = (type,)
         res = self.execute_query(query,args).fetchall()
         return res
     
     def admin_resQueue(self, type):
-        query = "SELECT user_id, id, status, params, ip FROM request WHERE request.status='in queue' AND request.type=%s"
+        query = "SELECT user_id, id, status, params, ip, request.uuid FROM request WHERE request.status='in queue' AND request.type=%s"
         args = (type,)
         res = self.execute_query(query,args).fetchall()
         return res
@@ -235,9 +235,8 @@ class PostgreSQL:
         return res
     # End users info
 
-
-
 # End admin
+
 
 db = PostgreSQL(host=host, database=database, user=user, password=password, port=port)
 db.connect()

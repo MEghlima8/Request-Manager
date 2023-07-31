@@ -324,8 +324,6 @@ app_methods.extrStegImg = function(){
     }
     else {Swal.fire({title:'فرمت فایل نامعتبر' ,text:'فرمت فایل آپلود شده معتبر نمی باشد', icon:'warning', confirmButtonText:'تایید'})}
 }
-
-
 // # Extract steg image
 
 
@@ -364,7 +362,6 @@ app_methods.extrNewReqAudio = function(){
 
     }
     else {Swal.fire({title:'فرمت فایل نامعتبر' ,text:'فرمت فایل آپلود شده معتبر نمی باشد', icon:'warning', confirmButtonText:'تایید'})}
-
 }
 
 app_methods.resExtrStegAudio = function(){
@@ -423,8 +420,6 @@ app_methods.steg_new_req_audio = function(){
 
     }
     else {Swal.fire({title:'فرمت فایل نامعتبر' ,text:'فرمت فایل آپلود شده معتبر نمی باشد', icon:'warning', confirmButtonText:'تایید'})}
-
-
 }
 // # Steg audio
 
@@ -433,12 +428,6 @@ app_methods.steg_new_req_audio = function(){
 Vue.createApp({
 
     data(){ return {
-        // all_panels :['add-calc' , 'res-add-calc' ,
-        //             'extr-newreq-steg-audio' ,'res-extr-audio' , 'res-steg-audio' , 'steg-newreq-audio' ,
-        //             'extr-newreq-steg' , 'res-extr-steg-img' , 'res-steg-img' , 'steg-newreq-img',
-        //             'sign-in' , 'sign-up' ,
-        //             'dashboard' ],
-        
         panel: 'sign-in',
         admin_panel: '',
 
@@ -483,10 +472,8 @@ Vue.createApp({
         all_audio_requests: 0,
         all_img_requests: 0,
 
-
         // progress bar
         progress: 0,
-        
     } },
     
     delimiters: ["${", "}$"],    

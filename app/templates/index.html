@@ -381,16 +381,16 @@
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input v-model="CalcNum1" type="text" class="form-control">
-                                                    <label class="form-label">عدد اول</label>
+                                                    <input v-model="CalcNum1" type="number" class="form-control">
+                                                    <label class="form-label"><br>عدد اول</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input v-model="CalcNum2" type="text" class="form-control">
-                                                    <label class="form-label">عدد دوم</label>
+                                                    <input v-model="CalcNum2" type="number" class="form-control">
+                                                    <label class="form-label"><br>عدد دوم</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -424,51 +424,35 @@
                                         <table class="table table-hover dashboard-task-infos">
                                             <thead>
                                                 <tr>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>عدد اول</th>
                                                     <th>عدد دوم</th>
-                                                    <th>پیشرفت</th>
                                                     <th>نتیجه</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr v-for="req in res_done">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[2]["num1"] }$</td>
                                                     <td>${ req[2]["num2"] }$</td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>${ req[3]["result"] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[2]["num1"] }$</td>
                                                     <td>${ req[2]["num2"] }$</td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال محاسبه</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[3] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[2]["num1"] }$</td>
                                                     <td>${ req[2]["num2"] }$</td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                 </tr>
                                             </tbody>
@@ -540,47 +524,31 @@
                                         <table class="table table-hover dashboard-task-infos">
                                             <thead>
                                                 <tr>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>صوت ورودی</th>                                            
-                                                    <th>پیشرفت</th>
                                                     <th>متن خروجی</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr v-for="req in res_done">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td> <a :href="req[2]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>${ req[3]["result"]["url"]["secret text"] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td> <a :href="req[2]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[3] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td> <a :href="req[2]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                 </tr>
                                             </tbody>
@@ -610,51 +578,35 @@
                                         <table class="table table-hover dashboard-task-infos">
                                             <thead>
                                                 <tr>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>متن ورودی</th>                                            
                                                     <th>صوت ورودی</th>                                            
-                                                    <th>پیشرفت</th>
                                                     <th>صوت خروجی</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr v-for="req in res_done">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[2]["text"] }$</td>
                                                     <td> <a :href="req[2]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td> <a :href="req[3]['result']['url']" target="_blank">پخش</a> </td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[2]["text"] }$</td>
                                                     <td> <a :href="req[2]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[3] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[2]["text"] }$</td>
                                                     <td> <a :href="req[2]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                 </tr>
                                             </tbody>
@@ -782,47 +734,31 @@
                                         <table class="table table-hover dashboard-task-infos">
                                             <thead>
                                                 <tr>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>عکس ورودی</th>                                            
-                                                    <th>پیشرفت</th>
                                                     <th>متن خروجی</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr v-for="req in res_done">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td> <a :href="req[2]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>${ req[3]["result"]["extracted text"] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td> <a :href="req[2]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                 </tr>
         
-                                                <tr v-for="req in res_processing">
-                                                    <td>${ req[0] }$</td>
+                                                <tr v-for="req in res_queue">
+                                                    <td>${ req[3] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td> <a :href="req[2]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                 </tr>
                                             </tbody>
@@ -853,51 +789,35 @@
                                         <table class="table table-hover dashboard-task-infos">
                                             <thead>
                                                 <tr>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>متن</th>
                                                     <th>عکس ورودی</th>
-                                                    <th>پیشرفت</th>
                                                     <th>عکس خروجی</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr v-for="req in res_done">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[2]["text"] }$</td>
                                                     <td> <a :href="req[2]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td> <a :href="req[3]['result']['url']" target="_blank">نمایش</a> </td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[4] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[2]["text"] }$</td>
                                                     <td> <a :href="req[2]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
-                                                    <td>${ req[0] }$</td>
+                                                    <td>${ req[3] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[2]["text"] }$</td>
                                                     <td> <a :href="req[2]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                 </tr>
                                             </tbody>
@@ -1220,11 +1140,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>آیدی کاربر</th>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>عدد اول</th>
                                                     <th>عدد دوم</th>
-                                                    <th>پیشرفت</th>
                                                     <th>نتیجه</th>
                                                     <th>آیپی</th>
                                                 </tr>
@@ -1232,45 +1151,30 @@
                                             <tbody>
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[3]["num1"] }$</td>
                                                     <td>${ req[3]["num2"] }$</td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>${ req[4]["result"] }$</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[3]["num1"] }$</td>
                                                     <td>${ req[3]["num2"] }$</td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال محاسبه</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[5] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[3]["num1"] }$</td>
                                                     <td>${ req[3]["num2"] }$</td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                     <td>${ req[4] }$</td>
                                                 </tr>
@@ -1305,10 +1209,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>آیدی کاربر</th>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>صوت ورودی</th>                                            
-                                                    <th>پیشرفت</th>
                                                     <th>متن خروجی</th>
                                                     <th>آیپی</th>
                                                 </tr>
@@ -1316,28 +1219,18 @@
                                             <tbody>
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>${ req[4]["result"]["url"]["secret text"] }$</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                     <td>${ req[5] }$</td>
 
@@ -1345,14 +1238,9 @@
         
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[5] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
@@ -1384,11 +1272,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>آیدی کاربر</th>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>متن ورودی</th>                                            
                                                     <th>صوت ورودی</th>                                            
-                                                    <th>پیشرفت</th>
                                                     <th>صوت خروجی</th>
                                                     <th>آیپی</th>
                                                 </tr>
@@ -1396,45 +1283,30 @@
                                             <tbody>
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td> <a :href="req[4]['result']['url']" target="_blank">پخش</a> </td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[5] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
@@ -1466,10 +1338,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>آیدی کاربر</th>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>عکس ورودی</th>                                            
-                                                    <th>پیشرفت</th>
                                                     <th>متن خروجی</th>
                                                     <th>آیپی</th>
                                                 </tr>
@@ -1477,42 +1348,27 @@
                                             <tbody>
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>${ req[4]["result"]["extracted text"] }$</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
@@ -1546,11 +1402,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>آیدی کاربر</th>
-                                                    <th>شماره درخواست</th>
+                                                    <th>شناسه درخواست</th>
                                                     <th>وضعیت</th>
                                                     <th>متن</th>
                                                     <th>عکس ورودی</th>
-                                                    <th>پیشرفت</th>
                                                     <th>عکس خروجی</th>
                                                     <th>آیپی</th>
                                                 </tr>
@@ -1558,45 +1413,30 @@
                                             <tbody>
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td> <a :href="req[4]['result']['url']" target="_blank">نمایش</a> </td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[6] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-blue" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>در حال پردازش</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>
         
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
-                                                    <td>${ req[1] }$</td>
+                                                    <td>${ req[5] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%"></div>
-                                                        </div>
-                                                    </td>
                                                     <td>منتظر</td>
                                                     <td>${ req[5] }$</td>
                                                 </tr>

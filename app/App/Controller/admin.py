@@ -16,7 +16,7 @@ def get_dashboard_info():
     return j_result
 
 
-
+# Takes a route and returns all successful, processing and in queue requests
 def get_route_reqs_status(type):
     res_done = db.db.admin_resDone(type)
     res_queue = db.db.admin_resQueue(type)
@@ -53,7 +53,6 @@ def res_extr_audio():
     result = {"status-code":200 , "result":users_extr_steg_audio_req_status}
     j_result = json.dumps(result)
     return j_result
-
 
 
 # users info

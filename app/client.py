@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser()
 
 def add_argument_parser():
     arguments = [
-        ['--route', 'route -> ex: /add-two-numbers'],
+        ['--route', 'ex: /add-two-numbers'],
         ['--num1', 'first number'],
         ['--num2', 'second number'],
         ['--reqid', 'your request id'],
@@ -123,7 +123,7 @@ def main():
         req_size = int(parser.parse_args().size)
     except:
         req_size = 1
-        
+    
     if host is None:
         host = 'localhost'
     if port is None:
