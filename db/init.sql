@@ -18,6 +18,7 @@ CREATE TABLE request (
     method VARCHAR (50) ,
     ip VARCHAR (255) ,
     status VARCHAR (50) ,
+    uuid VARCHAR (255) ,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 

@@ -8,10 +8,10 @@ services:
         build:
           context: .
           dockerfile: Dockerfile
-        image: myapp:v1
+        image: phdai_dev_rq_api:v2
         container_name: myapp
         ports:
-          - '80:80'
+          - '6060:80'
         networks:
           - network1
         depends_on:

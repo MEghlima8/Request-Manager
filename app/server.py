@@ -55,7 +55,7 @@ def check_token_and_add_req_to_db():
         access_token = request.headers.get('Authorization')
         if access_token is None:
             access_token = request.cookies.get('access_token')
-            
+    
     # If returned id so the token is valid 
     result = Token(token=access_token).handle_token()
     try:    
@@ -65,7 +65,7 @@ def check_token_and_add_req_to_db():
         res = {"result":{"request_id":s_req_id, "user_id":user_id} , "status-code":200}        
     except:
         # Token is invalid.
-        res = {"result":result , "status-code":401}        
+        res = {"result":result , "status-code":401}     
     return res    
 
 
@@ -398,7 +398,7 @@ def add_to_db(user_id):
         # Save image        
         try:
             img_steg_new_req_img = request.files['img_steg_new_req_img']         
-            msg_steg_newreq_img = request.form['msg_steg_newreq_img']       
+            msg_steg_newreq_img = request.form['msg_steg_newreq_img']
         except:
             info = request.get_json()
             msg_steg_newreq_img = info["params"]["text"]
@@ -478,7 +478,7 @@ def add_to_db(user_id):
 
 
 if __name__ == '__main__':
-    time.sleep(10)
+    time.sleep(20)
     t = threading.Thread(None, get_request.get_requests_from_queue, None, ())
     t.start()
     app.run(host=config.configs['HOST'], port=config.configs['PORT'] , debug=config.configs['DEBUG'])
