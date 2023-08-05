@@ -1,5 +1,8 @@
 from App import config
 from flask import Flask, request, render_template, session, make_response, abort
+from flask_restful import Api, Resource , reqparse
+from flask_swagger_ui import get_swaggerui_blueprint
+
 from App.Controller.email_controller import Email
 from App.Controller.user_controller import User
 from App.Controller import get_request
@@ -20,6 +23,22 @@ from PIL import Image
 import time
 
 app = Flask(__name__)
+
+SWAGGER_URL = config.configs['SWAGGER_URL']
+API_URL = config.configs['API_URL']
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': config.configs['SWAGGER_APP_NAME']
+    },
+)
+
+app.register_blueprint(swaggerui_blueprint)
+
+
+api = Api(app)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = int(config.configs['SEND_FILE_MAX_AGE_DEFAULT'])
 app.secret_key = config.configs['SECRET_KEY']
@@ -264,7 +283,7 @@ def signup():
     user = o_user.signup()
     
     if user["status"] == "True":
-        res = {"result":{"confirm_link":user} , "status-code":201 }
+        res = {"result":"signup was successfully" , "status-code":201 }
     else:
         res = {"result":user["result"] , "status-code":400}
     return res

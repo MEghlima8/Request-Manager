@@ -7,3 +7,5 @@ stegano
 requests
 scipy
 pydub
+flask_restful
+flask-swagger-ui

@@ -1,0 +1,581 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "مدیریت درخواست ها",
+    "version": "0.2.3"
+  },
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "tags": [
+          "Signup"
+        ],
+        "summary": "ثبت نام کاربر",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "اطلاعات کاربر جهت ثبت نام",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Signup"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "تایید ثبت نام اولیه و ارسال لینک تایید به ایمیل"
+          },
+          "400": {
+            "description": "ثبت نام ناموفق"
+          }
+        }
+      }
+    },
+    "/confirm": {
+      "post": {
+        "tags": [
+          "Confirm"
+        ],
+        "summary": "تایید حساب کاربری",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "لینک تایید جهت تایید حساب کاربری",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfirmPost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "تایید نهایی حساب کاربری"
+          },
+          "404": {
+            "description": "تایید حساب ناموفق"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Confirm"
+        ],
+        "summary": "تایید حساب کاربری",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "تایید جهت تایید حساب کاربری",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConfirmGet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "تایید نهایی حساب کاربری"
+          },
+          "404": {
+            "description": "تایید حساب ناموفق"
+          }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "tags": [
+          "Signin"
+        ],
+        "summary": "ورود به حساب کاربری",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "اطلاعات کاربر جهت ورود به حساب",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Signin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ورود موفقیت آمیز به حساب کاربری"
+          },
+          "400": {
+            "description": "اطلاعات نامعتبر"
+          },
+          "403": {
+            "description": "ایمیل تایید نشده است"
+          }
+        }
+      }
+    },
+    "/add-two-numbers": {
+      "post": {
+        "tags": [
+          "Add two numbers"
+        ],
+        "summary": "عملیات جمع دو عدد",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "توکن کاربر حهت احراز هویت",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "وارد کردن دو عدد",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Add-two-numbers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "تایید درخواست و برگرداندن شناسه درخواست"
+          },
+          "401": {
+            "description": "توکن نامعتبر"
+          }
+        }
+      }
+    },
+    "/get-result": {
+      "post": {
+        "tags": [
+          "Get result"
+        ],
+        "summary": "گرفتن نتیجه درخواست ارسال شده",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "توکن کاربر حهت احراز هویت",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ارسال شناسه درخواست",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Get-result"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "بازگرداندن خروجی درخواست"
+          },
+          "202": {
+            "description": "درخواست منتظر پردازش"
+          },
+          "400": {
+            "description": "شناسه درخواست نامعتبر"
+          },
+          "401": {
+            "description": "توکن نامعتبر"
+          }
+        }
+      }
+    },
+    "/hide-text-in-image": {
+      "post": {
+        "tags": [
+          "Hide text in image"
+        ],
+        "summary": "پنهان کردن متن در تصویر",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "توکن کاربر حهت احراز هویت",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ارسال متن و لینک تصویر",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hide-text-in-image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "بازگرداندن خروجی درخواست"
+          },
+          "202": {
+            "description": "درخواست منتظر پردازش"
+          },
+          "401": {
+            "description": "توکن نامعتبر"
+          }
+        }
+      }
+    },
+    "/get-hidden-text-from-image": {
+      "post": {
+        "tags": [
+          "Get hidden text from image"
+        ],
+        "summary": "استخراج متن از تصویر",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "توکن کاربر حهت احراز هویت",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ارسال لینک تصویر",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Get-hidden-text-from-image"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "بازگرداندن خروجی درخواست"
+          },
+          "202": {
+            "description": "درخواست منتظر پردازش"
+          },
+          "401": {
+            "description": "توکن نامعتبر"
+          }
+        }
+      }
+    },
+    "/hide-text-in-sound": {
+      "post": {
+        "tags": [
+          "Hide text in sound"
+        ],
+        "summary": "پنهان کردن متن در صوت",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "توکن کاربر حهت احراز هویت",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ارسال متن و لینک صوت",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hide-text-in-sound"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "بازگرداندن خروجی درخواست"
+          },
+          "202": {
+            "description": "درخواست منتظر پردازش"
+          },
+          "401": {
+            "description": "توکن نامعتبر"
+          }
+        }
+      }
+    },
+    "/get-hidden-text-from-sound": {
+      "post": {
+        "tags": [
+          "Get hidden text from sound"
+        ],
+        "summary": "استخراج متن از صوت",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "توکن کاربر حهت احراز هویت",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ارسال لینک صوت",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Get-hidden-text-from-sound"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "بازگرداندن خروجی درخواست"
+          },
+          "202": {
+            "description": "درخواست منتظر پردازش"
+          },
+          "401": {
+            "description": "توکن نامعتبر"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Signup": {
+      "required": [
+        "username",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "mohammad8"
+        },
+        "email": {
+          "type": "string",
+          "example": "randomemail@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "Abcdefgh@1"
+        }
+      }
+    },
+    "ConfirmPost": {
+      "required": [
+        "confirm_link"
+      ],
+      "properties": {
+        "confirm_link": {
+          "type": "string",
+          "example": "h2dR2Wpd9kTF76yeEwhA"
+        }
+      }
+    },
+    "ConfirmGet": {
+      "required": [
+        "link"
+      ],
+      "properties": {
+        "link": {
+          "type": "string",
+          "example": "h2dR2Wpd9kTF76yeEwhA"
+        }
+      }
+    },
+    "Signin": {
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "mohammad8"
+        },
+        "password": {
+          "type": "string",
+          "example": "Abcdefgh@1"
+        }
+      }
+    },
+    "Add-two-numbers": {
+      "required": [
+        "num1",
+        "num2"
+      ],
+      "properties": {
+        "num1": {
+          "type": "integer",
+          "example": 234453
+        },
+        "num2": {
+          "type": "integer",
+          "example": 75463
+        }
+      }
+    },
+    "Get-result": {
+      "required": [
+        "request_id"
+      ],
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "example": 234453
+        }
+      }
+    },
+    "Hide-text-in-image": {
+      "required": [
+        "params"
+      ],
+      "properties": {
+        "params": {
+          "required": [
+            "url",
+            "text"
+          ],
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Get-hidden-text-from-image": {
+      "required": [
+        "params"
+      ],
+      "properties": {
+        "params": {
+          "required": [
+            "url"
+          ],
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Hide-text-in-sound": {
+      "required": [
+        "params"
+      ],
+      "properties": {
+        "params": {
+          "required": [
+            "url",
+            "text"
+          ],
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "Get-hidden-text-from-sound": {
+      "required": [
+        "params"
+      ],
+      "properties": {
+        "params": {
+          "required": [
+            "url"
+          ],
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -40,4 +40,9 @@ configs = {
     
     # Docker Compose
     'RABBITMQ_SERVICE_NAME': os.getenv('RABBITMQ_SERVICE_NAME') , 
+    
+    # SWAGGER
+    'SWAGGER_URL': os.getenv('SWAGGER_URL') ,
+    'API_URL': os.getenv('API_URL') ,
+    'SWAGGER_APP_NAME': os.getenv('SWAGGER_APP_NAME')
 }
