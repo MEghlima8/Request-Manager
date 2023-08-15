@@ -113,7 +113,7 @@ def get_from_sound(info):
     # save wav as stegano audio
     hidden_text = soundstegano.decode(url)
 
-    res = {"result":{"url": {"secret text" : hidden_text} }}
+    res = {"result":{"secret text" : hidden_text} }
     res = json.dumps(res)
     return res
 
