@@ -1,6 +1,6 @@
 # request manager 
 Request Manager is a project that efficiently processes user requests and returns the desired results.
-This is version 0.2.4
+This is version 0.2.5
 
 ## Configuration
 Before you start using this application, make sure to update the configurations in the `.env` file. Below are some important settings you need to modify:

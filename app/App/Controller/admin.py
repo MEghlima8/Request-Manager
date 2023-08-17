@@ -1,6 +1,5 @@
 import json
 from App.Controller import db_postgres_controller as db
-from flask import request
 
 def get_dashboard_info():
     users_reqs_status = db.db.admin_getUsersRequestsStatus()

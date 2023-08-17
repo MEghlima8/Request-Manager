@@ -1141,6 +1141,8 @@
                                                 <tr>
                                                     <th>آیدی کاربر</th>
                                                     <th>شناسه درخواست</th>
+                                                    <th>تاریخ</th>
+                                                    <th>زمان</th>
                                                     <th>وضعیت</th>
                                                     <th>عدد اول</th>
                                                     <th>عدد دوم</th>
@@ -1152,6 +1154,8 @@
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[3]["num1"] }$</td>
                                                     <td>${ req[3]["num2"] }$</td>
@@ -1162,6 +1166,8 @@
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[3]["num1"] }$</td>
                                                     <td>${ req[3]["num2"] }$</td>
@@ -1172,6 +1178,8 @@
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[5] }$</td>
+                                                    <td>${ req[6]['date'] }$</td>
+                                                    <td>${ req[6]['time'] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[3]["num1"] }$</td>
                                                     <td>${ req[3]["num2"] }$</td>
@@ -1210,6 +1218,8 @@
                                                 <tr>
                                                     <th>آیدی کاربر</th>
                                                     <th>شناسه درخواست</th>
+                                                    <th>تاریخ</th>
+                                                    <th>زمان</th>
                                                     <th>وضعیت</th>
                                                     <th>صوت ورودی</th>                                            
                                                     <th>متن خروجی</th>
@@ -1220,6 +1230,8 @@
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
                                                     <td>${ req[4]["result"]["secret text"] }$</td>
@@ -1229,6 +1241,8 @@
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
                                                     <td>در حال پردازش</td>
@@ -1239,6 +1253,8 @@
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[5] }$</td>
+                                                    <td>${ req[6]['date'] }$</td>
+                                                    <td>${ req[6]['time'] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
                                                     <td>منتظر</td>
@@ -1273,6 +1289,8 @@
                                                 <tr>
                                                     <th>آیدی کاربر</th>
                                                     <th>شناسه درخواست</th>
+                                                    <th>تاریخ</th>
+                                                    <th>زمان</th>
                                                     <th>وضعیت</th>
                                                     <th>متن ورودی</th>                                            
                                                     <th>صوت ورودی</th>                                            
@@ -1284,6 +1302,8 @@
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
@@ -1294,6 +1314,8 @@
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
@@ -1304,6 +1326,8 @@
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[5] }$</td>
+                                                    <td>${ req[6]['date'] }$</td>
+                                                    <td>${ req[6]['time'] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">پخش</a> </td>
@@ -1339,6 +1363,8 @@
                                                 <tr>
                                                     <th>آیدی کاربر</th>
                                                     <th>شناسه درخواست</th>
+                                                    <th>تاریخ</th>
+                                                    <th>زمان</th>
                                                     <th>وضعیت</th>
                                                     <th>عکس ورودی</th>                                            
                                                     <th>متن خروجی</th>
@@ -1349,6 +1375,8 @@
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
                                                     <td>${ req[4]["result"]["extracted text"] }$</td>
@@ -1358,6 +1386,8 @@
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
                                                     <td>در حال پردازش</td>
@@ -1367,6 +1397,8 @@
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[6]['date'] }$</td>
+                                                    <td>${ req[6]['time'] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
                                                     <td>منتظر</td>
@@ -1403,6 +1435,8 @@
                                                 <tr>
                                                     <th>آیدی کاربر</th>
                                                     <th>شناسه درخواست</th>
+                                                    <th>تاریخ</th>
+                                                    <th>زمان</th>
                                                     <th>وضعیت</th>
                                                     <th>متن</th>
                                                     <th>عکس ورودی</th>
@@ -1414,6 +1448,8 @@
                                                 <tr v-for="req in res_done">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-green">انجام شده</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
@@ -1424,6 +1460,8 @@
                                                 <tr v-for="req in res_processing">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[6] }$</td>
+                                                    <td>${ req[7]['date'] }$</td>
+                                                    <td>${ req[7]['time'] }$</td>
                                                     <td><span class="label bg-blue">در حال انجام</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>
@@ -1434,6 +1472,8 @@
                                                 <tr v-for="req in res_queue">
                                                     <td>${ req[0] }$</td>
                                                     <td>${ req[5] }$</td>
+                                                    <td>${ req[6]['date'] }$</td>
+                                                    <td>${ req[6]['time'] }$</td>
                                                     <td><span class="label bg-orange">در صف</span></td>
                                                     <td>${ req[3]["text"] }$</td>
                                                     <td> <a :href="req[3]['url']" target="_blank">نمایش</a> </td>

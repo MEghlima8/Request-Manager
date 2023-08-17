@@ -13,7 +13,7 @@ CREATE TABLE request (
     user_id INT NOT NULL ,
     type VARCHAR (50) NOT NULL ,
     params JSONB NOT NULL ,
-    time VARCHAR (255) ,
+    time JSONB ,
     agent VARCHAR (255) ,
     method VARCHAR (50) ,
     ip VARCHAR (255) ,

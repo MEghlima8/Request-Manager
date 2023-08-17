@@ -208,19 +208,19 @@ class PostgreSQL:
     # Result
 
     def admin_resDone(self, type):
-        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip, request.uuid FROM request INNER JOIN process ON request.id=process.req_id WHERE request.status='done' AND request.type=%s"
+        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip, request.uuid, request.time FROM request INNER JOIN process ON request.id=process.req_id WHERE request.status='done' AND request.type=%s"
         args = (type,)
         res = self.execute_query(query,args).fetchall()
         return res
 
     def admin_resProcessing(self, type):
-        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip, request.uuid FROM request INNER JOIN process ON request.id=process.req_id WHERE  request.status='processing' AND request.type=%s"
+        query = "SELECT request.user_id, request.id, request.status, request.params, process.result, request.ip, request.uuid, request.time FROM request INNER JOIN process ON request.id=process.req_id WHERE  request.status='processing' AND request.type=%s"
         args = (type,)
         res = self.execute_query(query,args).fetchall()
         return res
     
     def admin_resQueue(self, type):
-        query = "SELECT user_id, id, status, params, ip, request.uuid FROM request WHERE request.status='in queue' AND request.type=%s"
+        query = "SELECT user_id, id, status, params, ip, request.uuid, request.time FROM request WHERE request.status='in queue' AND request.type=%s"
         args = (type,)
         res = self.execute_query(query,args).fetchall()
         return res

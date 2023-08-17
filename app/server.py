@@ -12,6 +12,7 @@ from App.Controller import admin
 from App.Controller.jwt import Token
 from App.Controller import db_postgres_controller as db
 from datetime import datetime
+from jdatetime import datetime as jdatetime
 import json
 import threading
 import uuid
@@ -43,6 +44,14 @@ api = Api(app)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = int(config.configs['SEND_FILE_MAX_AGE_DEFAULT'])
 app.secret_key = config.configs['SECRET_KEY']
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
+
+
+def get_datetime():
+    jdate = jdatetime.fromgregorian(datetime=datetime.now())
+    time = f'{jdate.hour+3}:{jdate.minute+30}:{jdate.second}'
+    date = f'{jdate.year}-{jdate.month}-{jdate.day}'
+    now_datetime = json.dumps({'date':date , 'time':time})
+    return now_datetime
 
 
 @app.route('/', methods=['GET'])
@@ -491,8 +500,8 @@ def add_to_db(user_id):
     agent = request.headers['User-Agent']
     method = request.method
     ip =  request.remote_addr
-    time = str(datetime.now()) 
-    req_id = db.db.addReqToDb(user_id, type, j_params, time, agent, method, ip, uuid.uuid4().hex)
+    j_date_time = get_datetime()
+    req_id = db.db.addReqToDb(user_id, type, j_params, j_date_time, agent, method, ip, uuid.uuid4().hex)
     return str(req_id)
 
 
